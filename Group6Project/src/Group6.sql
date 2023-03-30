@@ -31,6 +31,9 @@
 --          all attributes that are numeric but stored as characters
 --          UPDATE myTable SET ColumnA = NewValue WHERE ColumnA REGEXP '^[0-9]+$'
 
+-- To-Do's
+--      o add unique tags where appropriate
+
 create table PERSON (
     SSN CHAR(9) not null,       -- need to format output to be xxx-xx-xxx
     FName VARCHAR(15) not null,
@@ -103,3 +106,4 @@ create table DEPARTMENT(
             on delete SET NULL
             on update CASCADE
 );
+
