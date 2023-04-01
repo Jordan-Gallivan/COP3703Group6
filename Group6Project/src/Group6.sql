@@ -107,3 +107,27 @@ create table DEPARTMENT(
             on update CASCADE
 );
 
+create table INTERACTION (
+    Int_ID  CHAR(9) not null,
+    Int_Pt CHAR(9) not null,
+    Int_Date_Time  DATETIME not null,
+    Int_Desc  VARCHAR(150)  nOT null,
+     constraint INTERACTION_PK
+          primary key(Int_ID),
+           constraint INTERACTION_FK
+     foreign key (Int_Pt) references Patient(Pt_ID),
+    
+ );
+ 
+ Create table PROCEDURE (
+      Proc_Num   CHAR(9) not null,
+      Proc_Name  VARCHAR(40) not null,
+      Description VARCHAR(40)  not null,
+      Duration   CHAR(9) not null,
+      Proc_Dept   VARCHAR(40), not null,
+        constraint PROCEDURE_PK
+           primary key(Proc_Num),
+                               -- Foreign key
+       );
+            
+             
