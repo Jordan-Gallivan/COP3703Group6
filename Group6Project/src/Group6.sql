@@ -125,10 +125,45 @@ create table INTERACTION (
       Description VARCHAR(40)  not null,
       Duration   CHAR(9) not null,
       Proc_Dept   VARCHAR(40), not null,
+      
         constraint PROCEDURE_PK
-           primary key(Proc_Num),
-                               -- Foreign key
+           primary key(Proc_Num)
+                              
        );
        
+  create table PERFORMS(
+       Proc_Dr   CARCHAR(15) not null,
+       Proc    CHAR(15) nut null,      -- not sure "Proc"  stand for
+       
+       
+       );
+   create table PRESCRIBED_MEDICINE (
+         RX_Name  VARCHAR(15)  not null,
+         Manufacturer  CHAR(15) not null,
+         RX_Desc    VARCHAR(40)  not null,
+         
+          constraint PRESCRIBED_MEDICINE_PK
+          primary key(RX_Name)
+          
+       );
+   create table PRESCIPTION (
+          Pres_Dr VARCHAR(15) not null,
+          Pres_Rx VARCHAR(20) not null,
+          Pres_Pt VARCHAR(20) not null,
+          Date_Rx  DATE  not null,
             
-             
+            constraint PRESCRIPTION_FK
+           foreign key (Pres_Dr) references   DOCTOR(Dr_ID),
+           foreign key (Press_Rx) references  DOCTOR(Dr_ID)
+       );
+    create table  
+    
+create table UNDERGOES (
+  Proc_Pt VARCHAR(20) not null,
+  Proc_Notes VARCHAR(200),
+  Proc_Date_Time DATETIME,
+   
+   constraint UNDERGOES_FK
+  FOREIGN KEY (Proc_Pt) REFERENCES PATIENT(Pt_ID),
+  FOREIGN KEY (Proc) REFERENCES PROCEDURE(Proc_Num) -- Proc ??
+);
