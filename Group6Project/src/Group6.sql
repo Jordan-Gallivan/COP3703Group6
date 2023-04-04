@@ -53,26 +53,26 @@ create table PERSON (
 );
 
 create table PATIENT (
-    SSN CHAR(9) not null,
-    Pt_ID CHAR(9) not null,
-    Pt_condition VARCHAR(8) not null,
-    Pri_Care_Dr CHAR(9) not null,
-    Sec_Care_Dr CHAR(9),
+     SSN CHAR(9) not null,
+     Pt_ID CHAR(9) not null,
+     Pt_condition VARCHAR(8) not null,
+     Pri_Care_Dr CHAR(9) not null,
+     Sec_Care_Dr CHAR(9),
 
-    constraint PATIENT_PK
-        primary key (Pt_ID),
-    constraint PATIENT_SSN_FK
-        foreign key (SSN) references PERSON(SSN)
-                    on delete SET NULL
-                    on update CASCADE,
-    constraint PATIENT_PRIDR_FK
-        foreign key (Pri_Care_Dr) references DOCTOR(Dr_ID)
-                     on delete SET NULL
-                     on update CASCADE,
-    constraint PATIENT_SECDR_FK
-        foreign key (Sec_Care_Dr) references DOCTOR(Dr_ID)
-            on delete SET NULL
-            on update CASCADE
+     constraint PATIENT_PK
+         primary key (Pt_ID),
+     constraint PATIENT_SSN_FK
+         foreign key (SSN) references PERSON(SSN)
+             on delete SET NULL
+             on update CASCADE,
+     constraint PATIENT_PRIDR_FK
+         foreign key (Pri_Care_Dr) references DOCTOR(Dr_ID)
+             on delete SET NULL
+             on update CASCADE,
+     constraint PATIENT_SECDR_FK
+         foreign key (Sec_Care_Dr) references DOCTOR(Dr_ID)
+             on delete SET NULL
+    --             on update CASCADE
 );
 
 create table DOCTOR (
@@ -85,26 +85,26 @@ create table DOCTOR (
     constraint DOCTOR_SSN_FK
         foreign key (SSN) references PERSON(SSN)
             on delete SET NULL
-            on update CASCADE,
-    constraint DOCTOR_DEPT_FK
-        foreign key (Dept) references DEPARTMENT(Dept_Code)
+    --             on update CASCADE,
+            constraint DOCTOR_DEPT_FK
+            foreign key (Dept) references DEPARTMENT(Dept_Code)
             on delete SET NULL
-            on update CASCADE
+    --             on update CASCADE
 );
 
 create table DEPARTMENT(
-   Dept_code VARCHAR(4) not null,
-   Dept_name VARCHAR(15) not null,
-   Office_num CHAR(4) not null,
-   Phone CHAR(10),
-   Dept_head CHAR(9) not null,
+    Dept_code VARCHAR(4) not null,
+    Dept_name VARCHAR(15) not null,
+    Office_num CHAR(4) not null,
+    Phone CHAR(10),
+    Dept_head CHAR(9) not null,
 
-   constraint DEPARTMENT_PK
-        primary key (Dept_code),
+    constraint DEPARTMENT_PK
+       primary key (Dept_code),
     constraint DEPARTMENT_FK
-        foreign key (Dept_head) references DOCTOR
-            on delete SET NULL
-            on update CASCADE
+       foreign key (Dept_head) references DOCTOR
+           on delete SET NULL
+    --             on update CASCADE
 );
 
 create table INTERACTION (
@@ -112,56 +112,61 @@ create table INTERACTION (
     Int_Pt CHAR(9) not null,
     Int_Date_Time  DATETIME not null,
     Int_Desc  VARCHAR(150)  nOT null,
-     constraint INTERACTION_PK
-          primary key(Int_ID),
-           constraint INTERACTION_FK
-     foreign key (Int_Pt) references Patient(Pt_ID),
-    
+
+    constraint INTERACTION_PK
+        primary key(Int_ID),
+            constraint INTERACTION_FK
+    foreign key (Int_Pt) references Patient(Pt_ID),
  );
  
- Create table PROCEDURE (
-      Proc_Num   CHAR(9) not null,
-      Proc_Name  VARCHAR(40) not null,
-      Description VARCHAR(40)  not null,
-      Duration   CHAR(9) not null,
-      Proc_Dept   VARCHAR(40), not null,
-      
-        constraint PROCEDURE_PK
-           primary key(Proc_Num)
-                              
-       );
-       
-  create table PERFORMS(
-       Proc_Dr   CARCHAR(15) not null,
-       Proc    CHAR(15) nut null,      -- not sure "Proc"  stand for
-       
-       
-       );
-   create table PRESCRIBED_MEDICINE (
-         RX_Name  VARCHAR(15)  not null,
-         Manufacturer  CHAR(15) not null,
-         RX_Desc    VARCHAR(40)  not null,
-         
-          constraint PRESCRIBED_MEDICINE_PK
-          primary key(RX_Name)
-          
-       );
-   create table PRESCIPTION (
-          Pres_Dr VARCHAR(15) not null,
-          Pres_Rx VARCHAR(20) not null,
-          Pres_Pt VARCHAR(20) not null,
-          Date_Rx  DATE  not null,
-            
-            constraint PRESCRIPTION_FK
-           foreign key (Pres_Dr) references   DOCTOR(Dr_ID),
-           foreign key (Press_Rx) references  DOCTOR(Dr_ID)
-       ); 
+Create table PROCEDURE (
+    Proc_Num   CHAR(9) not null,
+    Proc_Name  VARCHAR(40) not null,
+    Description VARCHAR(40)  not null,
+    Duration   CHAR(9) not null,
+    Proc_Dept   VARCHAR(40), not null,
+
+    constraint PROCEDURE_PK
+        primary key(Proc_Num)
+
+);
+
+create table PERFORMS(
+    Proc_Dr   CARCHAR(15) not null,
+    Proc    CHAR(15) nut null,      -- not sure "Proc"  stand for
+
+
+);
+create table PRESCRIBED_MEDICINE (
+    RX_Name  VARCHAR(15)  not null,
+    Manufacturer  CHAR(15) not null,
+    RX_Desc    VARCHAR(40)  not null,
+
+    constraint PRESCRIBED_MEDICINE_PK
+    primary key(RX_Name)
+
+);
+create table PRESCRIPTION (
+    Pres_Dr VARCHAR(15) not null,
+    Pres_Rx VARCHAR(20) not null,
+    Pres_Pt VARCHAR(20) not null,
+    Date_Rx  DATE  not null,
+
+    constraint PRESCRIPTION_FK
+        foreign key (Pres_Dr)
+            references   DOCTOR(Dr_ID),
+    -- Why do we have to FK's to the same thing?
+        foreign key (Press_Rx)
+            references  DOCTOR(Dr_ID)
+);
 create table UNDERGOES (
-  Proc_Pt VARCHAR(20) not null,
-  Proc_Notes VARCHAR(200),
-  Proc_Date_Time DATETIME,
-   
-   constraint UNDERGOES_FK
-  FOREIGN KEY (Proc_Pt) REFERENCES PATIENT(Pt_ID),
-  FOREIGN KEY (Proc) REFERENCES PROCEDURE(Proc_Num) -- Proc ??
+    Proc_Pt VARCHAR(20) not null,
+    Proc_Notes VARCHAR(200),
+    Proc_Date_Time DATETIME,
+
+    constraint UNDERGOES_FK
+        foreign key (Proc_Pt)
+            references PATIENT(Pt_ID),
+        foreign key (Proc)
+            references PROCEDURE(Proc_Num) -- Proc ??
 );
