@@ -155,9 +155,7 @@ create table INTERACTION (
             constraint PRESCRIPTION_FK
            foreign key (Pres_Dr) references   DOCTOR(Dr_ID),
            foreign key (Press_Rx) references  DOCTOR(Dr_ID)
-       );
-    create table  
-    
+       ); 
 create table UNDERGOES (
   Proc_Pt VARCHAR(20) not null,
   Proc_Notes VARCHAR(200),
