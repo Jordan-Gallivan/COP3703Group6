@@ -173,4 +173,4 @@ create table UNDERGOES (
 -- comment for example
 -- comment number 2
 
--- conflict example
+--hello world
