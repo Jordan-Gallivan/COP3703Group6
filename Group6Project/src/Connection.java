@@ -1,6 +1,6 @@
 import java.sql.Connection;
-import java.sql.Drivermanager;
-import.java.sql.SQLExecption;
+import java.sql.DriverManager;
+import.java.sql.SQLException;
 
 public class Connection {
 
