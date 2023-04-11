@@ -132,7 +132,7 @@ Create table PROCEDURE (
 );
 
 create table PERFORMS(
-    Proc_Dr   CARCHAR(15) not null,
+    Proc_Dr   VARCHAR(15) not null,
     Proc    CHAR(15) nut null,      -- not sure "Proc"  stand for
 
 
