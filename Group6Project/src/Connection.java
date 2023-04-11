@@ -1,13 +1,14 @@
 import java.sql.Connection;
+import java.sql.Drivermanager;
+import.java.sql.SQLExecption;
 
-public class Connection{
+public class Connection {
 
-   public static void main(String[] args){
+   public static void main(String[] args) {
 
-       try{
-          Class.forname("Oracle.jdbc.driver.oracleDriver");
-
-       } catch (ClassNotFoundException e){
+       try {
+           Class.forname("Oracle.jdbc.driver.oracleDriver");
+	 } catch (ClassNotFoundException e){
            
             e.printStackTrace();
        }
@@ -15,17 +16,19 @@ public class Connection{
         String serverName = "cisvm-oracle.unfcsd.unf.edu";
         String portNumber = "1521";
         String sid = "orcl";
+	  //
         String url = "jdbc:oracle:thin:@cisvm-oracle.unfcsd.unf.edu:1521:orcl";
-        String username ="G1"
-        String password ="G6Spring2023"
+        String username ="G6"  
+        String password ="G6Spring2023" 
          try {
-			Connection conn = DriverManager.getConnection(url, username, password);
+		 
+		Connection conn = DriverManager.getConnection(url, username, password);
 			
 	        boolean reachable = conn.isValid(10);// 10 sec
 
 	        if(reachable) {
 	        	
-	        	System.out.println("Sucess");
+	        	System.out.println("Successfully connected");
 	        	conn.close();
 	        }
 		} catch (SQLException e) {
