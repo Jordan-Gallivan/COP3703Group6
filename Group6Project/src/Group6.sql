@@ -170,4 +170,3 @@ create table UNDERGOES (
         foreign key (Proc)
             references PROCEDURE(Proc_Num) -- Proc ??
 );
---testing
