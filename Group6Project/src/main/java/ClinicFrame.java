@@ -58,7 +58,7 @@ public class ClinicFrame extends JFrame{
     private JLabel permPhoneLabel = new JLabel("Permanent Phone Number");
     private JLabel DOBLabel = new JLabel("Date of Birth");
     private JLabel sexLabel = new JLabel("Sex");
-    private JLabel permAddressLabel = new JLabel("Permanent Address");
+    private JLabel permAddressLabel = new JLabel("Permanent Address:");
     private JLabel streetLabel = new JLabel("Street");
     private JLabel cityLabel = new JLabel("City");
     private JLabel stateLabel = new JLabel("State");
@@ -88,8 +88,24 @@ public class ClinicFrame extends JFrame{
     private JTextField secondaryCareTextField = new JTextField();
 
     // Department Labels and Text fields
-
+    private JLabel deptNameLabel = new JLabel("Department Name");
+    private JLabel deptCodeLabel = new JLabel("Department Code");
+    private JLabel deptPhoneLabel = new JLabel("Department Office Phone");
+    private JLabel deptOfficeLabel = new JLabel("Department Office Number");
+    private JTextField deptNameTextField = new JTextField();
+    private JTextField deptCodeTextField = new JTextField();
+    private JTextField deptPhoneTextField = new JTextField();
+    private JTextField deptOfficeTextField = new JTextField();
+    
     // Procedure Labels and Text fields
+    private JLabel procNumberLabel = new JLabel("Procedure Number");
+    private JLabel procNameLabel = new JLabel("Procedure Name");
+    private JLabel procDescLabel = new JLabel("Procedure Description");
+    private JLabel procDurationLabel = new JLabel("Procedure Duration");
+    private JTextField procNumberTextField = new JTextField();
+    private JTextField procNameTextField = new JTextField();
+    private JTextField procDescTextField = new JTextField();
+    private JTextField procDurationTextField = new JTextField();
 
     // Doctor Labels and Text fields
     private JLabel doctorIDLabel = new JLabel("Doctor ID");
@@ -98,9 +114,23 @@ public class ClinicFrame extends JFrame{
     private JTextField doctorDepartmentTextField = new JTextField();
 
     // Medication Labels and Text fields
-
+    private JLabel medNameLabel = new JLabel("Medication Name");
+    private JLabel medDescLabel = new JLabel("Medication Description");
+    private JLabel medManufacturer = new JLabel("Medication Manufacturer");
+    private JTextField medNameTextField = new JTextField();
+    private JTextField medDescTextField = new JTextField();
+    private JTextField medManufacturerTextField = new JTextField();
+    
     // Interaction Labels and Text fields
-
+    private JLabel interIDLabel = new JLabel("Interaction ID");
+    private JLabel interDescLabel = new JLabel("Interaction Description");
+    private JLabel interDateLabel = new JLabel("Interaction Date");
+    private JLabel interTimeLabel = new JLabel("Interaction Time");
+    private JTextField interIDTextField = new JTextField();
+    private JTextField interDescTextField = new JTextField();
+    private JTextField interDateField = new JTextField();
+    private JTextField interTimeTextField = new JTextField();
+    
     // Procedure Labels and Text fields
 
     // Prompt for editing Patient Medications
@@ -187,6 +217,10 @@ public class ClinicFrame extends JFrame{
                 currentPageTextFields.add(secondaryCareTextField);
                 break;
             case DEPARTMENT:
+            	currentPageTextFields.add(deptNameTextField);
+                currentPageTextFields.add(deptCodeTextField);
+                currentPageTextFields.add(deptPhoneTextField);
+                currentPageTextFields.add(deptOfficeTextField);
                 break;
             case PROCEDURE:
                 break;
@@ -269,7 +303,6 @@ public class ClinicFrame extends JFrame{
      */
     private void person(int i) {
         // i provides a buffer from the top to add text fields, ID's, information etc.
-
         resetLayout();
         lManager.gridwidth = 4;
         lManager.gridx = 0;
@@ -377,8 +410,6 @@ public class ClinicFrame extends JFrame{
         lManager.gridy = i + 14;
         this.add(zipTextField, lManager);
 
-
-
     }
 
     /**
@@ -427,9 +458,112 @@ public class ClinicFrame extends JFrame{
 
         setSize(550,800);
     }
+    /**
+     * Adding a Department
+     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
+     *      *          labels or other information.
+     */
+    private void addDepartment(int i){
+    	 currentPage = CurrPage.DEPARTMENT;
+    	 i = 2;
+    	
+    	resetLayout();
+    	lManager.gridwidth = 4;
+        lManager.gridx = 0;
+        lManager.gridy = 0;
+        this.add(homeButton, lManager);   
 
-    private void addDepartment(){}
-    private void addProcedure(){}
+        lManager.gridwidth = 2;
+        lManager.gridx = 0;
+        lManager.gridy = i + 1;
+        this.add(deptNameLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = i + 1;
+        this.add(deptNameTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = i + 2;
+        this.add(deptCodeLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = i + 2;
+        this.add(deptCodeTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = i + 3;
+        this.add(deptPhoneLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = i + 3;
+        this.add(deptPhoneTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = i + 4;
+        this.add(deptOfficeLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = i + 4;
+        this.add(deptOfficeTextField, lManager);
+        
+        lManager.gridx = 0;
+        lManager.gridy = 19 + i;
+        this.add(clearButton, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 19 + i;
+        this.add(submitButton, lManager);
+        
+    }
+    /**
+     * Adding a Procedure
+     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
+     *      *          labels or other information.
+     */
+    private void addProcedure(int i){
+    	currentPage = CurrPage.PROCEDURE;
+    	resetLayout();
+    	
+    	i = 2;
+    	lManager.gridwidth = 4;
+        lManager.gridx = 0;
+        lManager.gridy = 0;
+        this.add(homeButton, lManager);
+    	
+        lManager.gridx = 0;
+        lManager.gridy = 1;
+        this.add(procNumberLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 1;
+        this.add(procNumberTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 16 + i;
+        this.add(procNameLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 16 + i;
+        this.add(procNameTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 17 + i;
+        this.add(procDescLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 17 + i;
+        this.add(procDescTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 18 + i;
+        this.add(procDurationLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 18 + i;
+        this.add(procDurationTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 19 + i;
+        this.add(clearButton, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 19 + i;
+        this.add(submitButton, lManager);
+
+        setSize(550,800);
+    	
+
+    }
     /**
      * Displays Doctor Information
      * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
@@ -465,7 +599,45 @@ public class ClinicFrame extends JFrame{
         setSize(550,800);
     }
 
-    private void addMedication(){}
+    private void addMedication(int i){
+//    	private JLabel medNameLabel = new JLabel("Medication Name");
+//        private JLabel medDescLabel = new JLabel("Medication Description");
+//        private JLabel medManufacturer = new JLabel("Medication Manufacturer");
+//        private JTextField medNameTextField = new JTextField();
+//        private JTextField medDescTextField = new JTextField();
+//        private JTextField medManufacturerTextField = new JTextField();
+    	currentPage = CurrPage.MEDICATION;
+    	resetLayout();
+    	
+    	i = 2;
+    	lManager.gridwidth = 4;
+        lManager.gridx = 0;
+        lManager.gridy = 0;
+        this.add(homeButton, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 1;
+        this.add(doctorIDLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 1;
+        this.add(doctorIDTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 16 + i;
+        this.add(doctorDepartmentLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 16 + i;
+        this.add(doctorDepartmentTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 17 + i;
+        this.add(clearButton, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 17 + i;
+        this.add(submitButton, lManager);
+
+        setSize(550,800);
+    }
     private void addInteraction(){}
     private void addProcedureInfo(){}
     private void editPatientMedication(){}
@@ -528,16 +700,16 @@ public class ClinicFrame extends JFrame{
                     ClinicFrame.this.addPatient(2);
                     break;
                 case 2:
-                    ClinicFrame.this.addDepartment();
+                    ClinicFrame.this.addDepartment(2);
                     break;
                 case 3:
-                    ClinicFrame.this.addProcedure();
+                    ClinicFrame.this.addProcedure(2);
                     break;
                 case 4:
                     ClinicFrame.this.addDoctor(2);
                     break;
                 case 5:
-                    ClinicFrame.this.addMedication();
+                    ClinicFrame.this.addMedication(2);
                     break;
                 case 6:
                     ClinicFrame.this.addInteraction();
