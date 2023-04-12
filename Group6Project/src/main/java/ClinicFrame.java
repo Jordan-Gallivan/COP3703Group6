@@ -2,16 +2,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 /*TO DO:
  * 1. Change Procedure Duration TextField to a formatted time/date situation
  * 2. Change add Interaction  Date and Time TextFields to formatted time/date situations
  * 3. Figure out what needs to go in Add Patient Procedure
+ * 4. Find out how to add procedures to doctors
+ *      add to doctor page
+ *          -> will require a second ADD() for SQL
+ * 5.
  */
 
 public class ClinicFrame extends JFrame{
@@ -119,8 +119,11 @@ public class ClinicFrame extends JFrame{
     // Doctor Labels and Text fields
     private JLabel doctorIDLabel = new JLabel("Doctor ID");
     private JLabel doctorDepartmentLabel = new JLabel("Department");
+    private JLabel doctorProceduresLabel = new JLabel("Procedures performed by doctor" +
+            "(separated by a comma)");
     private JTextField doctorIDTextField = new JTextField();
     private JTextField doctorDepartmentTextField = new JTextField();
+    private JTextField doctorProceduresTextField = new JTextField();
 
     // Medication Labels and Text fields
     private JLabel medNameLabel = new JLabel("Medication Name");
@@ -132,28 +135,47 @@ public class ClinicFrame extends JFrame{
     
     // Interaction Labels and Text fields
     private JLabel interIDLabel = new JLabel("Interaction ID");
-    private JLabel interDescLabel = new JLabel("Interaction Description");
+    private JLabel interPatientLabel = new JLabel("Interaction Patient");
     private JLabel interDateLabel = new JLabel("Interaction Date");
     private JLabel interTimeLabel = new JLabel("Interaction Time");
+    private JLabel interDescLabel = new JLabel("Interaction Description");
     private JTextField interIDTextField = new JTextField();
-    private JTextField interDescTextField = new JTextField();
+    private JTextField interPatientTextField = new JTextField();
     private JTextField interDateField = new JTextField();
     private JTextField interTimeTextField = new JTextField();
-    
-    // Add Procedure Labels and Text fields
-    private JLabel editPatientProcLabel = new JLabel("Enter Patient ID below to add a Procedure "
-    		+ "to an existing Patient and click 'Submit'");
-    private JTextField editPatientProcTextField = new JTextField(20);
+    private JTextField interDescTextField = new JTextField();
 
-    // Prompt for editing Patient Medications
-    private JLabel editPatientMedsLabel1 = new JLabel("Enter Patient ID below to add a Medication "
-    		+ "to an existing Patient and click 'Submit'");
-    private JLabel editPatientMedsLabel2 = new JLabel("Make corrections as necessary and select 'Submit' to save changes.");
-    private JTextField patientIDforMedsTextField = new JTextField(20);
+    // Add Procedure Labels and Text fields
+    private JLabel procPatientLabel = new JLabel("Patient ID");
+    private JLabel procPatientNumberLabel = new JLabel("Procedure Number");
+    private JLabel procNotesLabel = new JLabel("Procedure Notes");
+    private JLabel procDateLabel = new JLabel("Procedure Date");
+    private JLabel procTimeLabel = new JLabel("Procedure Time");
+    private JTextField procPatientTextField = new JTextField();
+    private JTextField procPatientNumberTextField = new JTextField();
+    private JTextField procNotesTextField = new JTextField();
+    private JTextField procDateTextField = new JTextField();
+    private JTextField procTimeTextField = new JTextField();
+
+    // Prompt for adding Patient Medications
+    private JLabel prescDrLabel = new JLabel("Prescribing Doctor ID");
+    private JLabel prescMedLabel = new JLabel("Prescription Medication Name");
+    private JLabel prescPatientLabel = new JLabel("Patient ID");
+    private JLabel prescDateLabel = new JLabel("Prescription Date");
+    private JTextField prescDrTextField = new JTextField();
+    private JTextField prescMedTextField = new JTextField();
+    private JTextField prescPatientTextField = new JTextField();
+    private JTextField prescDateTextField = new JTextField();
 
     // Prompt for viewing Patient HeathRecord
     private JLabel viewPatientLabel = new JLabel("Enter Patient ID below to view Health Record and click 'Submit'");
-    private JTextField patientIDforRecordTextField = new JTextField(20);
+    private JLabel patientProceduresLabel = new JLabel("Procedures undergone by Patient");
+    private JLabel patientInteractionsLabel = new JLabel("Patient Interactions");
+    private JLabel patientMedicaitonsLabel = new JLabel("Patient Medications");
+
+    private JTextArea patientProceduresTextArea = new JTextArea();
+    private JTextArea patientInteractionsTextArea = new JTextArea();
+    private JTextArea patientMedicationsTextArea = new JTextArea();
 
     // Prompt for viewing Department Services
     private JLabel viewDeptSvcLabel = new JLabel("Enter Department number below to view " +
@@ -250,6 +272,7 @@ public class ClinicFrame extends JFrame{
                 currentPageTextFields.add(doctorIDTextField);
                 personArrayList();
                 currentPageTextFields.add(doctorDepartmentTextField);
+                currentPageTextFields.add(doctorProceduresTextField);
                 break;
             case MEDICATION:
             	currentPageTextFields.add(medNameTextField);
@@ -258,13 +281,23 @@ public class ClinicFrame extends JFrame{
                 break;
             case INTERACTION:
             	currentPageTextFields.add(interIDTextField);
-                currentPageTextFields.add(interDescTextField);
+                currentPageTextFields.add(interPatientTextField);
                 currentPageTextFields.add(interDateField);
                 currentPageTextFields.add(interTimeTextField);
+                currentPageTextFields.add(interDescTextField);
                 break;
             case PROCEDURE_:
+                currentPageTextFields.add(procPatientTextField);
+                currentPageTextFields.add(procPatientNumberTextField);
+                currentPageTextFields.add(procNotesTextField);
+                currentPageTextFields.add(procDateTextField);
+                currentPageTextFields.add(procTimeTextField);
                 break;
             case PATIENT_MEDICATION:
+                currentPageTextFields.add(prescDrTextField);
+                currentPageTextFields.add(prescMedTextField);
+                currentPageTextFields.add(prescPatientTextField);
+                currentPageTextFields.add(prescDateTextField);
                 break;
             case HEALTH_RECORD:
                 break;
@@ -446,13 +479,13 @@ public class ClinicFrame extends JFrame{
      */
     private void addPatient(int i) {
         currentPage = CurrPage.PATIENT;
-        person(2);
+        person(i);
 
         lManager.gridx = 0;
-        lManager.gridy = 1;
+        lManager.gridy = i-1;
         this.add(patientIDLabel, lManager);
         lManager.gridx = 2;
-        lManager.gridy = 1;
+        lManager.gridy = i-1;
         this.add(patientIDTextField, lManager);
 
         lManager.gridx = 0;
@@ -619,20 +652,27 @@ public class ClinicFrame extends JFrame{
         this.add(doctorIDTextField, lManager);
 
         lManager.gridx = 0;
-        lManager.gridy = 16 + i;
+        lManager.gridy = 17 + i;
         this.add(doctorDepartmentLabel, lManager);
         lManager.gridx = 2;
-        lManager.gridy = 16 + i;
+        lManager.gridy = 17 + i;
         this.add(doctorDepartmentTextField, lManager);
 
         lManager.gridx = 0;
-        lManager.gridy = 17 + i;
+        lManager.gridy = 18 + i;
+        this.add(doctorProceduresLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 18 + i;
+        this.add(doctorProceduresTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 19 + i;
         this.add(clearButton, lManager);
         lManager.gridx = 2;
-        lManager.gridy = 17 + i;
+        lManager.gridy = 19 + i;
         this.add(submitButton, lManager);
 
-        setSize(550,800);
+        setSize(700,800);
     }
     /**
      * Adding a Medication
@@ -684,9 +724,6 @@ public class ClinicFrame extends JFrame{
     	currentPage = CurrPage.INTERACTION;
     	resetLayout();
 
-        // need to align with SQL
-
-
     	lManager.gridwidth = 2;
         lManager.gridx = 0;
         lManager.gridy = 0;
@@ -702,10 +739,10 @@ public class ClinicFrame extends JFrame{
 
         lManager.gridx = 0;
         lManager.gridy = 2;
-        this.add(interDescLabel, lManager);
+        this.add(interPatientLabel, lManager);
         lManager.gridx = 1;
         lManager.gridy = 2;
-        this.add(interDescTextField, lManager);
+        this.add(interPatientTextField, lManager);
 
         lManager.gridx = 0;
         lManager.gridy = 3;
@@ -723,9 +760,16 @@ public class ClinicFrame extends JFrame{
 
         lManager.gridx = 0;
         lManager.gridy = 5;
-        this.add(clearButton, lManager);
+        this.add(interDescLabel, lManager);
         lManager.gridx = 1;
         lManager.gridy = 5;
+        this.add(interDescTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 6;
+        this.add(clearButton, lManager);
+        lManager.gridx = 1;
+        lManager.gridy = 6;
         this.add(submitButton, lManager);
 
         setSize(550,800);
@@ -737,22 +781,54 @@ public class ClinicFrame extends JFrame{
     private void addProceduretoPatient(){
     	currentPage = CurrPage.PROCEDURE_;
     	resetLayout();
-   
-    	lManager.gridwidth = 2;
+
+    	lManager.gridwidth = 4;
         lManager.gridx = 0;
         lManager.gridy = 0;
         this.add(homeButton, lManager);
 
+        lManager.gridwidth = 2;
         lManager.gridx = 0;
         lManager.gridy = 1;
-        this.add(editPatientProcLabel, lManager);
+        this.add(procPatientLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 1;
+        this.add(procPatientTextField, lManager);
+
         lManager.gridx = 0;
         lManager.gridy = 2;
-        this.add(editPatientProcTextField, lManager);
+        this.add(procPatientNumberLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 2;
+        this.add(procPatientNumberTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 3;
+        this.add(procNotesLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 3;
+        this.add(procNotesTextField, lManager);
 
         lManager.gridx = 0;
         lManager.gridy = 4;
+        this.add(procDateLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 4;
+        this.add(procDateTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 5;
+        this.add(procTimeLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 5;
+        this.add(procTimeTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 6;
         this.add(submitButton, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 6;
+        this.add(clearButton, lManager);
         
         setSize(550,800);
     }
@@ -761,32 +837,49 @@ public class ClinicFrame extends JFrame{
      */
     private void addMedicationtoPatient(){
     	currentPage = CurrPage.PATIENT_MEDICATION;
-    	resetLayout();
+        resetLayout();
 
-    	lManager.gridwidth = 2;
+        lManager.gridwidth = 4;
         lManager.gridx = 0;
         lManager.gridy = 0;
         this.add(homeButton, lManager);
-       
+
+        lManager.gridwidth = 2;
         lManager.gridx = 0;
         lManager.gridy = 1;
-        this.add(editPatientMedsLabel1, lManager);
+        this.add(prescDrLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 1;
+        this.add(prescDrTextField, lManager);
+
         lManager.gridx = 0;
         lManager.gridy = 2;
-        this.add(patientIDforMedsTextField, lManager);
-        
-        lManager.gridx = 1;
+        this.add(prescMedLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 2;
+        this.add(prescMedTextField, lManager);
+
+        lManager.gridx = 0;
         lManager.gridy = 3;
+        this.add(prescPatientLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 3;
+        this.add(prescPatientTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 4;
+        this.add(prescDateLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 4;
+        this.add(prescDateTextField, lManager);
+
+
+        lManager.gridx = 0;
+        lManager.gridy = 5;
         this.add(submitButton, lManager);
-       
-        
-//        lManager.gridx = 2;
-//        lManager.gridy = 3;
-//        this.add(clearButton, lManager);
-        
-//        lManager.gridx = 0;
-//        lManager.gridy = 4;
-//        this.add(editPatientMedsLabel2, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 5;
+        this.add(clearButton, lManager);
         
         setSize(550,800);
     }
@@ -794,27 +887,51 @@ public class ClinicFrame extends JFrame{
      *View Patient Health Record
      */
     private void viewPatient(){
-    	currentPage = CurrPage.HEALTH_RECORD;
-    	resetLayout();
+    	int i = 3;
+        addPatient(i);
 
-    	lManager.gridwidth = 2;
-        lManager.gridx = 0;
-        lManager.gridy = 0;
-        this.add(homeButton, lManager);	
-        
+        lManager.gridwidth = 4;
         lManager.gridx = 0;
         lManager.gridy = 1;
         this.add(viewPatientLabel, lManager);
-        lManager.gridx = 0;
+
+        // need to add TF's for prescribed medicine, interactions and procedures
+        patientProceduresTextArea.setColumns(40);
+        patientProceduresTextArea.setRows(8);
+        patientInteractionsTextArea.setColumns(40);
+        patientInteractionsTextArea.setRows(8);
+        patientMedicationsTextArea.setColumns(40);
+        patientMedicationsTextArea.setRows(8);
+
+        lManager.gridwidth = 4;
+        lManager.gridx = 4;
+        lManager.gridy = 1;
+        this.add(patientProceduresLabel, lManager);
+        lManager.gridheight = 5;
+        lManager.gridx = 4;
         lManager.gridy = 2;
-        this.add(patientIDforRecordTextField, lManager);
+        this.add(patientProceduresTextArea, lManager);
+
+        lManager.gridheight = 1;
+        lManager.gridx = 4;
+        lManager.gridy = 7;
+        this.add(patientInteractionsLabel, lManager);
+        lManager.gridheight = 5;
+        lManager.gridx = 4;
+        lManager.gridy = 8;
+        this.add(patientInteractionsTextArea, lManager);
+
+        lManager.gridheight = 1;
+        lManager.gridx = 4;
+        lManager.gridy = 13;
+        this.add(patientMedicaitonsLabel, lManager);
+        lManager.gridheight = 5;
+        lManager.gridx = 4;
+        lManager.gridy = 14;
+        this.add(patientMedicationsTextArea, lManager);
         
-        lManager.gridx = 0;
-        lManager.gridy = 3;
-        this.add(submitButton, lManager);
         
-        
-        setSize(550,800);
+        setSize(1300,800);
     }
     /**
      * Displays the Services that the Department offers
