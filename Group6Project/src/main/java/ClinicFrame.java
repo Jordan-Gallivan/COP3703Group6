@@ -95,24 +95,26 @@ public class ClinicFrame extends JFrame{
     private JTextField secondaryCareTextField = new JTextField();
 
     // Department Labels and Text fields
-    private JLabel deptNameLabel = new JLabel("Department Name");
     private JLabel deptCodeLabel = new JLabel("Department Code");
-    private JLabel deptPhoneLabel = new JLabel("Department Office Phone");
+    private JLabel deptNameLabel = new JLabel("Department Name");
     private JLabel deptOfficeLabel = new JLabel("Department Office Number");
-    private JTextField deptNameTextField = new JTextField();
+    private JLabel deptPhoneLabel = new JLabel("Department Office Phone");
     private JTextField deptCodeTextField = new JTextField();
-    private JTextField deptPhoneTextField = new JTextField();
+    private JTextField deptNameTextField = new JTextField();
     private JTextField deptOfficeTextField = new JTextField();
+    private JTextField deptPhoneTextField = new JTextField();
     
     // Procedure Labels and Text fields
     private JLabel procNumberLabel = new JLabel("Procedure Number");
     private JLabel procNameLabel = new JLabel("Procedure Name");
     private JLabel procDescLabel = new JLabel("Procedure Description");
     private JLabel procDurationLabel = new JLabel("Procedure Duration");
+    private JLabel procDepartmentLabel = new JLabel("Procedure Department");
     private JTextField procNumberTextField = new JTextField();
     private JTextField procNameTextField = new JTextField();
     private JTextField procDescTextField = new JTextField();
     private JTextField procDurationTextField = new JTextField();
+    private JTextField procDepartmentTextField = new JTextField();
 
     // Doctor Labels and Text fields
     private JLabel doctorIDLabel = new JLabel("Doctor ID");
@@ -232,16 +234,17 @@ public class ClinicFrame extends JFrame{
                 currentPageTextFields.add(secondaryCareTextField);
                 break;
             case DEPARTMENT:
-            	currentPageTextFields.add(deptNameTextField);
                 currentPageTextFields.add(deptCodeTextField);
-                currentPageTextFields.add(deptPhoneTextField);
+                currentPageTextFields.add(deptNameTextField);
                 currentPageTextFields.add(deptOfficeTextField);
+                currentPageTextFields.add(deptPhoneTextField);
                 break;
             case PROCEDURE:
             	currentPageTextFields.add(procNumberTextField);
                 currentPageTextFields.add(procNameTextField);
                 currentPageTextFields.add(procDescTextField);
                 currentPageTextFields.add(procDurationTextField);
+                currentPageTextFields.add(procDepartmentTextField);
                 break;
             case DOCTOR:
                 currentPageTextFields.add(doctorIDTextField);
@@ -250,8 +253,8 @@ public class ClinicFrame extends JFrame{
                 break;
             case MEDICATION:
             	currentPageTextFields.add(medNameTextField);
-                currentPageTextFields.add(medDescTextField);
                 currentPageTextFields.add(medManufacturerTextField);
+                currentPageTextFields.add(medDescTextField);
                 break;
             case INTERACTION:
             	currentPageTextFields.add(interIDTextField);
@@ -502,31 +505,31 @@ public class ClinicFrame extends JFrame{
         lManager.gridwidth = 1;
         lManager.gridx = 0;
         lManager.gridy = 1;
-        this.add(deptNameLabel, lManager);
-        lManager.gridx = 1;
-        lManager.gridy = 1;
-        this.add(deptNameTextField, lManager);
-
-        lManager.gridx = 0;
-        lManager.gridy = 2;
         this.add(deptCodeLabel, lManager);
         lManager.gridx = 1;
-        lManager.gridy = 2;
+        lManager.gridy = 1;
         this.add(deptCodeTextField, lManager);
 
         lManager.gridx = 0;
+        lManager.gridy = 2;
+        this.add(deptNameLabel, lManager);
+        lManager.gridx = 1;
+        lManager.gridy = 2;
+        this.add(deptNameTextField, lManager);
+
+        lManager.gridx = 0;
         lManager.gridy = 3;
-        this.add(deptPhoneLabel, lManager);
+        this.add(deptOfficeLabel, lManager);
         lManager.gridx = 1;
         lManager.gridy = 3;
-        this.add(deptPhoneTextField, lManager);
+        this.add(deptOfficeTextField, lManager);
 
         lManager.gridx = 0;
         lManager.gridy = 4;
-        this.add(deptOfficeLabel, lManager);
+        this.add(deptPhoneLabel, lManager);
         lManager.gridx = 1;
         lManager.gridy = 4;
-        this.add(deptOfficeTextField, lManager);
+        this.add(deptPhoneTextField, lManager);
         
         lManager.gridx = 0;
         lManager.gridy = 5;
@@ -581,9 +584,16 @@ public class ClinicFrame extends JFrame{
 
         lManager.gridx = 0;
         lManager.gridy = 6;
-        this.add(clearButton, lManager);
+        this.add(procDepartmentLabel, lManager);
         lManager.gridx = 1;
         lManager.gridy = 6;
+        this.add(procDepartmentTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 7;
+        this.add(clearButton, lManager);
+        lManager.gridx = 1;
+        lManager.gridy = 7;
         this.add(submitButton, lManager);
 
         setSize(550,800);
@@ -646,17 +656,17 @@ public class ClinicFrame extends JFrame{
 
         lManager.gridx = 0;
         lManager.gridy = 2;
-        this.add(medDescLabel, lManager);
+        this.add(medManufacturerLabel, lManager);
         lManager.gridx = 1;
         lManager.gridy = 2;
-        this.add(medDescTextField, lManager);
+        this.add(medManufacturerTextField, lManager);
         
         lManager.gridx = 0;
         lManager.gridy = 3;
-        this.add(medManufacturerLabel, lManager);
+        this.add(medDescLabel, lManager);
         lManager.gridx = 1;
         lManager.gridy = 3;
-        this.add(medManufacturerTextField, lManager);
+        this.add(medDescTextField, lManager);
 
         lManager.gridx = 0;
         lManager.gridy = 4;
@@ -673,6 +683,9 @@ public class ClinicFrame extends JFrame{
     private void addInteraction(){
     	currentPage = CurrPage.INTERACTION;
     	resetLayout();
+
+        // need to align with SQL
+
 
     	lManager.gridwidth = 2;
         lManager.gridx = 0;
