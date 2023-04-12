@@ -18,19 +18,27 @@ public class StringChecker {
         return true;
     }
     public static boolean SSNCheck(String s) {
-        // complete
+        if (s.length() != 9) return false;
+        for (int i = 0; i < s.length(); i++) {
+            if (!Character.isDigit(s.charAt(i))) return false;
+        }
         return true;
     }
     public static boolean phoneCheck(String s) {
-        // complete
+        if (s.length() != 10) return false;
+        for (int i = 0; i < s.length(); i++) {
+            if (!Character.isDigit(s.charAt(i))) return false;
+        }
         return true;
     }
-    public static boolean DOBCheck(String s) {
+    public static boolean DOBCheck(String s) { 
         // complete
         return true;
     }
     public static boolean sexCheck(String s) {
-        // complete
+        if (s.length() > 10) return false;
+        for (int i = 0; i < s.length(); i++) {
+            if (!Character.isLetter(s.charAt(i))) return false;
         return true;
     }
     public static boolean stateCheck(String s) {
@@ -38,27 +46,42 @@ public class StringChecker {
         return true;
     }
     public static boolean zipCheck(String s) {
-        // complete
+        if (s.length() != 5) return false;
+        for (int i = 0; i < s.length(); i++) {
+            if (!Character.isDigit(s.charAt(i))) return false;
+        }
         return true;
     }
     public static boolean conditionCheck(String s) {
-        // complete
+        if (s.length() > 8) return false;
+        for (int i = 0; i < s.length(); i++) {
+            if (!Character.isLetter(s.charAt(i))) return false;
         return true;
     }
 
     // Dr Checks
     public static boolean drIDCheck(String s) {
-        // complete
+        if(s.length() != 9) return false;
+        if (s.charAt(0) != 'D') return false;
+        for (int i = 1; i < s.length(); i++) {
+            if (!Character.isDigit(s.charAt(i))) return false;
+        }
         return true;
     }
 
     // Department Checks
-    public static boolean deptCodeChec(String s) {
-        // complete
+    public static boolean deptCodeCheck(String s) {
+        if(s.length() > 4) return false;
+        for (int i = 0; i < s.length(); i++) {
+            if (!Character.isDigit(s.charAt(i))) return false;
+        }
         return true;
     }
     public static boolean officeNumCheck(String s) {
-        // complete
+        if(s.length() != 4) return false;
+        for (int i = 0; i < s.length(); i++) {
+            if (!Character.isDigit(s.charAt(i))) return false;
+        }
         return true;
     }
 
@@ -70,7 +93,10 @@ public class StringChecker {
 
     // Procedure Checks
     public static boolean procedureNumberCheck(String s) {
-        // complete
+        if(s.length() != 7) return false;
+        for (int i = 0; i < s.length(); i++) {
+            if (!Character.isDigit(s.charAt(i))) return false;
+        }
         return true;
     }
 
