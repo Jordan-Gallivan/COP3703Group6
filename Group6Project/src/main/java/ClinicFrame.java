@@ -8,6 +8,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+/*TO DO:
+ * 1. Change Procedure Duration TextField to a formatted time/date situation
+ * 2. Change add Interaction  Date and Time TextFields to formatted time/date situations
+ * 3. Figure out what needs to go in Add Patient Procedure
+ */
+
 public class ClinicFrame extends JFrame{
 
     // Layout, Constraints, Janel;
@@ -44,7 +50,7 @@ public class ClinicFrame extends JFrame{
     private JLabel HPLabel = new JLabel("Welcome to Dr. Kanewala's Clinic");
     private JLabel HPUserSelection= new JLabel("What would you like to do?");
     private String[] HPoptions = {"","Add New Patient", "Add New Department", "Add New Procedure", "Add New Doctor",
-            "Add New Medication", "Add New Interaction", "Edit Existing Procedure", "Edit Existing Patient Medications",
+            "Add New Medication", "Add New Interaction", "Add Patient Procedure", "Add Patient Medications",
             "View Patient Health Record", "View Department Services", "View Procedures Completed by Doctors"};
     private  JComboBox<String> HPUserSelectionOptions = new JComboBox<String>(HPoptions);
 
@@ -132,26 +138,26 @@ public class ClinicFrame extends JFrame{
     private JTextField interTimeTextField = new JTextField();
     
     // Add Procedure Labels and Text fields
-    //private JLabel editProc = new JLabel("Interaction ID");
-
+    
+ 
     // Prompt for editing Patient Medications
-    private JLabel editPatientMedsLabel = new JLabel("Enter Patient ID below.  Make corrections as necessary" +
-            "and select 'Submit' to save changes.");
-    private JTextField patientIDforMedsTextField = new JTextField();
+    private JLabel editPatientMedsLabel1 = new JLabel("Enter Patient ID below");
+    private JLabel editPatientMedsLabel2 = new JLabel("Make corrections as necessary and select 'Submit' to save changes.");
+    private JTextField patientIDforMedsTextField = new JTextField(20);
 
     // Prompt for viewing Patient HeathRecord
     private JLabel viewPatientLabel = new JLabel("Enter Patient ID below to view Health Record.");
-    private JTextField patientIDforRecordTextField = new JTextField();
+    private JTextField patientIDforRecordTextField = new JTextField(20);
 
     // Prompt for viewing Department Services
     private JLabel viewDeptSvcLabel = new JLabel("Enter Department number below to view " +
             "services provided by that department.");
-    private JTextField deptNumforServicesTextField = new JTextField();
+    private JTextField deptNumforServicesTextField = new JTextField(20);
 
     // Prompt for viewing Doctor Procedures
     private JLabel viewDrProcLabel = new JLabel("Enter Doctor ID below to see Procedures" +
-            "performed by that Doctor.");
-    private JTextField docIDforProceduresTextField = new JTextField();
+            " performed by that Doctor.");
+    private JTextField docIDforProceduresTextField = new JTextField(20);
 
 
 
@@ -282,7 +288,6 @@ public class ClinicFrame extends JFrame{
         currentPageTextFields.add(stateTextField);
         currentPageTextFields.add(zipTextField);
     }
-
     /**
      * Displays the home page
      */
@@ -480,104 +485,101 @@ public class ClinicFrame extends JFrame{
     }
     /**
      * Adding a Department
-     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
-     *      *          labels or other information.
      */
-    private void addDepartment(int i){
-    	 currentPage = CurrPage.DEPARTMENT;
-    	 i = 2;
-    	
+    private void addDepartment(){
+    	currentPage = CurrPage.DEPARTMENT;
     	resetLayout();
-    	lManager.gridwidth = 4;
+    	
+    	lManager.gridwidth = 2;
         lManager.gridx = 0;
         lManager.gridy = 0;
         this.add(homeButton, lManager);   
 
-        lManager.gridwidth = 2;
+        lManager.gridwidth = 1;
         lManager.gridx = 0;
-        lManager.gridy = i + 1;
+        lManager.gridy = 1;
         this.add(deptNameLabel, lManager);
-        lManager.gridx = 2;
-        lManager.gridy = i + 1;
+        lManager.gridx = 1;
+        lManager.gridy = 1;
         this.add(deptNameTextField, lManager);
 
         lManager.gridx = 0;
-        lManager.gridy = i + 2;
+        lManager.gridy = 2;
         this.add(deptCodeLabel, lManager);
-        lManager.gridx = 2;
-        lManager.gridy = i + 2;
+        lManager.gridx = 1;
+        lManager.gridy = 2;
         this.add(deptCodeTextField, lManager);
 
         lManager.gridx = 0;
-        lManager.gridy = i + 3;
+        lManager.gridy = 3;
         this.add(deptPhoneLabel, lManager);
-        lManager.gridx = 2;
-        lManager.gridy = i + 3;
+        lManager.gridx = 1;
+        lManager.gridy = 3;
         this.add(deptPhoneTextField, lManager);
 
         lManager.gridx = 0;
-        lManager.gridy = i + 4;
+        lManager.gridy = 4;
         this.add(deptOfficeLabel, lManager);
-        lManager.gridx = 2;
-        lManager.gridy = i + 4;
+        lManager.gridx = 1;
+        lManager.gridy = 4;
         this.add(deptOfficeTextField, lManager);
         
         lManager.gridx = 0;
-        lManager.gridy = 19 + i;
+        lManager.gridy = 5;
         this.add(clearButton, lManager);
-        lManager.gridx = 2;
-        lManager.gridy = 19 + i;
+        lManager.gridx = 1;
+        lManager.gridy = 5;
         this.add(submitButton, lManager);
+        
+        setSize(550,800);
         
     }
     /**
      * Adding a Procedure
-     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
-     *      *          labels or other information.
      */
-    private void addProcedure(int i){
+    private void addProcedure(){
     	currentPage = CurrPage.PROCEDURE;
     	resetLayout();
-    	
-    	i = 2;
-    	lManager.gridwidth = 4;
+    
+    	lManager.gridwidth = 2;
         lManager.gridx = 0;
         lManager.gridy = 0;
         this.add(homeButton, lManager);
     	
         lManager.gridx = 0;
         lManager.gridy = 1;
+        lManager.gridwidth = 1;
         this.add(procNumberLabel, lManager);
-        lManager.gridx = 2;
+        lManager.gridx = 1;
         lManager.gridy = 1;
         this.add(procNumberTextField, lManager);
 
         lManager.gridx = 0;
-        lManager.gridy = 16 + i;
+        lManager.gridy = 3;
         this.add(procNameLabel, lManager);
-        lManager.gridx = 2;
-        lManager.gridy = 16 + i;
+        lManager.gridx = 1;
+        lManager.gridy = 3;
         this.add(procNameTextField, lManager);
 
         lManager.gridx = 0;
-        lManager.gridy = 17 + i;
+        lManager.gridy = 4;
         this.add(procDescLabel, lManager);
-        lManager.gridx = 2;
-        lManager.gridy = 17 + i;
+        lManager.gridx = 1;
+        lManager.gridy = 4;
         this.add(procDescTextField, lManager);
 
         lManager.gridx = 0;
-        lManager.gridy = 18 + i;
+        lManager.gridy = 5;
         this.add(procDurationLabel, lManager);
-        lManager.gridx = 2;
-        lManager.gridy = 18 + i;
+        lManager.gridx = 1;
+        lManager.gridy = 5;
         this.add(procDurationTextField, lManager);
 
         lManager.gridx = 0;
-        lManager.gridy = 19 + i;
+        lManager.gridy = 6;
         this.add(clearButton, lManager);
-        lManager.gridx = 2;
-        lManager.gridy = 19 + i;
+        lManager.gridx = 1;
+        lManager.gridy = 6;
         this.add(submitButton, lManager);
 
         setSize(550,800);
@@ -620,172 +622,237 @@ public class ClinicFrame extends JFrame{
     }
     /**
      * Adding a Medication
-     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
-     *      *          labels or other information.
      */
-    private void addMedication(int i){
+    private void addMedication(){
     	currentPage = CurrPage.MEDICATION;
     	resetLayout();
-    	
-    	i = 2;
-    	lManager.gridwidth = 4;
+
+    	lManager.gridwidth = 2;
         lManager.gridx = 0;
         lManager.gridy = 0;
         this.add(homeButton, lManager);
 
+        lManager.gridwidth = 1;
         lManager.gridx = 0;
         lManager.gridy = 1;
         this.add(medNameLabel, lManager);
-        lManager.gridx = 2;
+        lManager.gridx = 1;
         lManager.gridy = 1;
         this.add(medNameTextField, lManager);
 
         lManager.gridx = 0;
-        lManager.gridy = 16 + i;
+        lManager.gridy = 2;
         this.add(medDescLabel, lManager);
-        lManager.gridx = 2;
-        lManager.gridy = 16 + i;
+        lManager.gridx = 1;
+        lManager.gridy = 2;
         this.add(medDescTextField, lManager);
         
         lManager.gridx = 0;
-        lManager.gridy = 17 + i;
+        lManager.gridy = 3;
         this.add(medManufacturerLabel, lManager);
-        lManager.gridx = 2;
-        lManager.gridy = 17 + i;
+        lManager.gridx = 1;
+        lManager.gridy = 3;
         this.add(medManufacturerTextField, lManager);
 
         lManager.gridx = 0;
-        lManager.gridy = 17 + i;
+        lManager.gridy = 4;
         this.add(clearButton, lManager);
-        lManager.gridx = 2;
-        lManager.gridy = 17 + i;
+        lManager.gridx = 1;
+        lManager.gridy = 4;
         this.add(submitButton, lManager);
 
         setSize(550,800);
     }
     /**
      * Adding an Interaction
-     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
-     *      *          labels or other information.
      */
-    private void addInteraction(int i){
+    private void addInteraction(){
     	currentPage = CurrPage.INTERACTION;
     	resetLayout();
-    	
-    	i = 2;
-    	lManager.gridwidth = 4;
+
+    	lManager.gridwidth = 2;
         lManager.gridx = 0;
         lManager.gridy = 0;
         this.add(homeButton, lManager);
     	
+        lManager.gridwidth = 1;
         lManager.gridx = 0;
         lManager.gridy = 1;
         this.add(interIDLabel, lManager);
-        lManager.gridx = 2;
+        lManager.gridx = 1;
         lManager.gridy = 1;
         this.add(interIDTextField, lManager);
 
         lManager.gridx = 0;
-        lManager.gridy = 16 + i;
+        lManager.gridy = 2;
         this.add(interDescLabel, lManager);
-        lManager.gridx = 2;
-        lManager.gridy = 16 + i;
+        lManager.gridx = 1;
+        lManager.gridy = 2;
         this.add(interDescTextField, lManager);
 
         lManager.gridx = 0;
-        lManager.gridy = 17 + i;
+        lManager.gridy = 3;
         this.add(interDateLabel, lManager);
-        lManager.gridx = 2;
-        lManager.gridy = 17 + i;
+        lManager.gridx = 1;
+        lManager.gridy = 3;
         this.add(interDateField, lManager);
 
         lManager.gridx = 0;
-        lManager.gridy = 18 + i;
+        lManager.gridy = 4;
         this.add(interTimeLabel, lManager);
-        lManager.gridx = 2;
-        lManager.gridy = 18 + i;
+        lManager.gridx = 1;
+        lManager.gridy = 4;
         this.add(interTimeTextField, lManager);
 
         lManager.gridx = 0;
-        lManager.gridy = 19 + i;
+        lManager.gridy = 5;
         this.add(clearButton, lManager);
-        lManager.gridx = 2;
-        lManager.gridy = 19 + i;
+        lManager.gridx = 1;
+        lManager.gridy = 5;
         this.add(submitButton, lManager);
 
         setSize(550,800);
     	
     }
-    
     /**
      * Adding a Procedure to a Specific Patient's Health Records
-     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
-     *          labels or other information.  Example, Patient ID.
      */
     private void addProceduretoPatient(){
     	currentPage = CurrPage.PROCEDURE_;
     	resetLayout();
    
-    	lManager.gridwidth = 4;
+    	lManager.gridwidth = 2;
         lManager.gridx = 0;
         lManager.gridy = 0;
         this.add(homeButton, lManager);
+        
+        lManager.gridx = 0;
+        lManager.gridy = 5;
+        this.add(clearButton, lManager);
+        lManager.gridx = 0;
+        lManager.gridy = 4;
+        this.add(submitButton, lManager);
+        
+        setSize(550,800);
     }
     /**
      * Edit Patient Medications
-     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
-     *          labels or other information.  Example, Patient ID.
      */
     private void editPatientMedication(){
     	currentPage = CurrPage.PATIENT_MEDICATION;
     	resetLayout();
 
-    	lManager.gridwidth = 4;
+    	lManager.gridwidth = 2;
         lManager.gridx = 0;
         lManager.gridy = 0;
         this.add(homeButton, lManager);
+       
+        lManager.gridx = 0;
+        lManager.gridy = 1;
+        this.add(editPatientMedsLabel1, lManager);
+        lManager.gridx = 0;
+        lManager.gridy = 2;
+        this.add(editPatientMedsLabel2, lManager);
+        lManager.gridx = 0;
+        lManager.gridy = 3;
+        this.add(patientIDforMedsTextField, lManager);
+        
+        lManager.gridx = 0;
+        lManager.gridy = 5;
+        this.add(clearButton, lManager);
+        lManager.gridx = 0;
+        lManager.gridy = 4;
+        this.add(submitButton, lManager);
+        
+        setSize(550,800);
     }
     /**
      *View Patient Health Record
-     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
-     *          labels or other information.  Example, Patient ID.
      */
     private void viewPatient(){
     	currentPage = CurrPage.HEALTH_RECORD;
     	resetLayout();
 
-    	lManager.gridwidth = 4;
+    	lManager.gridwidth = 2;
         lManager.gridx = 0;
         lManager.gridy = 0;
-        this.add(homeButton, lManager);		
+        this.add(homeButton, lManager);	
+        
+        lManager.gridx = 0;
+        lManager.gridy = 1;
+        this.add(viewPatientLabel, lManager);
+        lManager.gridx = 0;
+        lManager.gridy = 2;
+        this.add(patientIDforRecordTextField, lManager);
+        
+        lManager.gridx = 0;
+        lManager.gridy = 4;
+        this.add(clearButton, lManager);
+        lManager.gridx = 0;
+        lManager.gridy = 3;
+        this.add(submitButton, lManager);
+        
+        
+        setSize(550,800);
     }
     /**
      * Displays the Services that the Department offers
-     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
-     *          labels or other information.  Example, Patient ID.
      */
     private void viewDepartmentServices(){
     	currentPage = CurrPage.DEPARTMENT_SERVICES;
     	resetLayout();
     
-    	lManager.gridwidth = 4;
+    	lManager.gridwidth = 2;
         lManager.gridx = 0;
         lManager.gridy = 0;
         this.add(homeButton, lManager);
+        
+        lManager.gridx = 0;
+        lManager.gridy = 1;
+        this.add(viewDeptSvcLabel, lManager);
+        lManager.gridx = 0;
+        lManager.gridy = 2;
+        this.add(deptNumforServicesTextField, lManager);
+        
+        lManager.gridx = 0;
+        lManager.gridy = 4;
+        this.add(clearButton, lManager);
+        lManager.gridx = 0;
+        lManager.gridy = 3;
+        this.add(submitButton, lManager);
+        
+        
+        setSize(550,800);
     }
     /**
      * View the Procedures any Doctor has done by Doctor ID
-     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
-     *          labels or other information.  Example, Patient ID.
      */
     private void viewDoctorProcedures(){
     	currentPage = CurrPage.DOCTOR_PROCEDURES;
     	resetLayout();
 
-    	lManager.gridwidth = 4;
+    	lManager.gridwidth = 2;
         lManager.gridx = 0;
         lManager.gridy = 0;
         this.add(homeButton, lManager);
+        
+       
+        lManager.gridx = 0;
+        lManager.gridy = 1;
+        this.add(viewDrProcLabel, lManager);
+        lManager.gridx = 0;
+        lManager.gridy = 2;
+        this.add(docIDforProceduresTextField, lManager);
+        
+        lManager.gridx = 0;
+        lManager.gridy = 4;
+        this.add(clearButton, lManager);
+        lManager.gridx = 0;
+        lManager.gridy = 3;
+        this.add(submitButton, lManager);
+        
+        
+        setSize(550,800);
     }
 
     class InnerActionListener implements ActionListener {
@@ -840,19 +907,19 @@ public class ClinicFrame extends JFrame{
                     ClinicFrame.this.addPatient(2);
                     break;
                 case 2:
-                    ClinicFrame.this.addDepartment(2);
+                    ClinicFrame.this.addDepartment();
                     break;
                 case 3:
-                    ClinicFrame.this.addProcedure(2);
+                    ClinicFrame.this.addProcedure();
                     break;
                 case 4:
                     ClinicFrame.this.addDoctor(2);
                     break;
                 case 5:
-                    ClinicFrame.this.addMedication(2);
+                    ClinicFrame.this.addMedication();
                     break;
                 case 6:
-                    ClinicFrame.this.addInteraction(2);
+                    ClinicFrame.this.addInteraction();
                     break;
                 case 7:
                     ClinicFrame.this.addProceduretoPatient();
