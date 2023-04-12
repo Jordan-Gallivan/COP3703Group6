@@ -131,22 +131,27 @@ public class ClinicFrame extends JFrame{
     private JTextField interDateField = new JTextField();
     private JTextField interTimeTextField = new JTextField();
     
-    // Edit Procedure Labels and Text fields
+    // Add Procedure Labels and Text fields
+    //private JLabel editProc = new JLabel("Interaction ID");
 
     // Prompt for editing Patient Medications
     private JLabel editPatientMedsLabel = new JLabel("Enter Patient ID below.  Make corrections as necessary" +
             "and select 'Submit' to save changes.");
+    private JTextField patientIDforMedsTextField = new JTextField();
 
     // Prompt for viewing Patient HeathRecord
     private JLabel viewPatientLabel = new JLabel("Enter Patient ID below to view Health Record.");
+    private JTextField patientIDforRecordTextField = new JTextField();
 
     // Prompt for viewing Department Services
     private JLabel viewDeptSvcLabel = new JLabel("Enter Department number below to view " +
             "services provided by that department.");
+    private JTextField deptNumforServicesTextField = new JTextField();
 
     // Prompt for viewing Doctor Procedures
     private JLabel viewDrProcLabel = new JLabel("Enter Doctor ID below to see Procedures" +
             "performed by that Doctor.");
+    private JTextField docIDforProceduresTextField = new JTextField();
 
 
 
@@ -259,7 +264,6 @@ public class ClinicFrame extends JFrame{
             TF.setColumns(20);
         }
     }
-
     /**
      * adds the person text fields to the current textfields arraylist
      */
@@ -659,6 +663,11 @@ public class ClinicFrame extends JFrame{
 
         setSize(550,800);
     }
+    /**
+     * Adding an Interaction
+     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
+     *      *          labels or other information.
+     */
     private void addInteraction(int i){
     	currentPage = CurrPage.INTERACTION;
     	resetLayout();
@@ -708,12 +717,76 @@ public class ClinicFrame extends JFrame{
     	
     }
     
-    private void editExistingProcedure(){}
-    private void editPatientMedication(){}
-    private void viewPatient(){}
-    private void viewDepartmentServices(){}
-    private void viewDoctorProcedures(){}
+    /**
+     * Adding a Procedure to a Specific Patient's Health Records
+     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
+     *          labels or other information.  Example, Patient ID.
+     */
+    private void addProceduretoPatient(){
+    	currentPage = CurrPage.PROCEDURE_;
+    	resetLayout();
+   
+    	lManager.gridwidth = 4;
+        lManager.gridx = 0;
+        lManager.gridy = 0;
+        this.add(homeButton, lManager);
+    }
+    /**
+     * Edit Patient Medications
+     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
+     *          labels or other information.  Example, Patient ID.
+     */
+    private void editPatientMedication(){
+    	currentPage = CurrPage.PATIENT_MEDICATION;
+    	resetLayout();
 
+    	lManager.gridwidth = 4;
+        lManager.gridx = 0;
+        lManager.gridy = 0;
+        this.add(homeButton, lManager);
+    }
+    /**
+     *View Patient Health Record
+     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
+     *          labels or other information.  Example, Patient ID.
+     */
+    private void viewPatient(){
+    	currentPage = CurrPage.HEALTH_RECORD;
+    	resetLayout();
+
+    	lManager.gridwidth = 4;
+        lManager.gridx = 0;
+        lManager.gridy = 0;
+        this.add(homeButton, lManager);		
+    }
+    /**
+     * Displays the Services that the Department offers
+     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
+     *          labels or other information.  Example, Patient ID.
+     */
+    private void viewDepartmentServices(){
+    	currentPage = CurrPage.DEPARTMENT_SERVICES;
+    	resetLayout();
+    
+    	lManager.gridwidth = 4;
+        lManager.gridx = 0;
+        lManager.gridy = 0;
+        this.add(homeButton, lManager);
+    }
+    /**
+     * View the Procedures any Doctor has done by Doctor ID
+     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
+     *          labels or other information.  Example, Patient ID.
+     */
+    private void viewDoctorProcedures(){
+    	currentPage = CurrPage.DOCTOR_PROCEDURES;
+    	resetLayout();
+
+    	lManager.gridwidth = 4;
+        lManager.gridx = 0;
+        lManager.gridy = 0;
+        this.add(homeButton, lManager);
+    }
 
     class InnerActionListener implements ActionListener {
         /**
@@ -782,7 +855,7 @@ public class ClinicFrame extends JFrame{
                     ClinicFrame.this.addInteraction(2);
                     break;
                 case 7:
-                    ClinicFrame.this.editExistingProcedure();
+                    ClinicFrame.this.addProceduretoPatient();
                     break;
                 case 8:
                     ClinicFrame.this.editPatientMedication();
