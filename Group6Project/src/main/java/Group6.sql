@@ -108,33 +108,42 @@ create table DEPARTMENT(
 );
 
 create table INTERACTION (
-    Int_ID  CHAR(9) not null,
+    Int_ID  integer not null,
     Int_Pt CHAR(9) not null,
     Int_Date_Time  DATETIME not null,
-    Int_Desc  VARCHAR(150)  nOT null,
+    Int_Desc  VARCHAR(150)  not null,
 
-    constraint INTERACTION_PK
-        primary key(Int_ID),
-            constraint INTERACTION_FK
-    foreign key (Int_Pt) references Patient(Pt_ID),
+--     constraint INTERACTION_PK
+--         primary key(Int_ID),
+    constraint INTERACTION_FK
+        foreign key (Int_Pt) references Patient(Pt_ID)
+        on delete SET NULL
  );
  
 Create table PROCEDURE (
-    Proc_Num   CHAR(9) not null,
+    Proc_Num   CHAR(7) not null,
     Proc_Name  VARCHAR(40) not null,
     Description VARCHAR(40)  not null,
-    Duration   CHAR(9) not null,
+    Duration   real not null,
     Proc_Dept   VARCHAR(40), not null,
 
     constraint PROCEDURE_PK
-        primary key(Proc_Num)
-
+        primary key(Proc_Num),
+    constraint PROCEDURE_FK_DEPT
+        foreign key Proc_Dept references DEPARTMENT(Dept_code)
+        on delete SET NULL
 );
 
 create table PERFORMS(
-    Proc_Dr   VARCHAR(15) not null,
-    Proc    CHAR(15) nut null,      -- not sure "Proc"  stand for
+    Proc_Dr     CHAR(9) not null,
+    Proc        CHAR(7) not null,
 
+    constraint PERFORMS_FK_DR
+        foreign key Proc_Dr references DOCTOR(Dr_ID)
+        on delete SET NULL,
+    constraint PERFORMS_FK_PROC
+        foreign key Proc references PROCEDURE(Proc_Num)
+            on delete SET NULL,
 
 );
 create table PRESCRIBED_MEDICINE (
@@ -143,30 +152,35 @@ create table PRESCRIBED_MEDICINE (
     RX_Desc    VARCHAR(40)  not null,
 
     constraint PRESCRIBED_MEDICINE_PK
-    primary key(RX_Name)
+        primary key(RX_Name)
 
 );
 create table PRESCRIPTION (
-    Pres_Dr VARCHAR(15) not null,
-    Pres_Rx VARCHAR(20) not null,
-    Pres_Pt VARCHAR(20) not null,
+    Pres_Dr CHAR(9) not null,
+    Pres_Rx VARCHAR(15) not null,
+    Pres_Pt CHAR(9) not null,
     Date_Rx  DATE  not null,
 
-    constraint PRESCRIPTION_FK
-        foreign key (Pres_Dr)
-            references   DOCTOR(Dr_ID),
-    -- Why do we have to FK's to the same thing?
-        foreign key (Press_Rx)
-            references  DOCTOR(Dr_ID)
+    constraint PRESCRIPTION_FK_DR
+        foreign key (Pres_Dr) references DOCTOR(Dr_ID)
+        on delete SET NULL,
+    constraint PRESCRIPTION_FK_RX
+        foreign key (Pres_Rx) references PRESCRIBED_MEDICINE(RX_Name)
+            on delete SET NULL,
+    constraint PRESCRIPTION_FK_PT
+        foreign key (Pres_Pt) references PATIENT(Pt_ID)
+            on delete SET NULL
 );
 create table UNDERGOES (
-    Proc_Pt VARCHAR(20) not null,
-    Proc_Notes VARCHAR(200),
-    Proc_Date_Time DATETIME,
+    Proc_Pt     CHAR(9) not null,
+    Proc_Num    CHAR(7) not null,
+    Proc_Notes  VARCHAR(200),
+    Proc_Date_Time  DATETIME,
 
-    constraint UNDERGOES_FK
-        foreign key (Proc_Pt)
-            references PATIENT(Pt_ID),
-        foreign key (Proc)
-            references PROCEDURE(Proc_Num) -- Proc ??
+    constraint UNDERGOES_FK_PT
+        foreign key (Proc_Pt) references PATIENT(Pt_ID)
+            on delete SET NULL,
+    constraint UNDERGOES_FK_PROC
+        foreign key (Proc_Num) references PROCEDURE(Proc_Num)
+            on delete SET NULL
 );
