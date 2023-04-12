@@ -1,6 +1,4 @@
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -79,6 +77,46 @@ public class ClinicFrame extends JFrame{
     private JTextField stateTextField = new JTextField();
     private JTextField zipTextField = new JTextField();
 
+    // Patient Labels and Text fields
+    private JLabel patientIDLabel = new JLabel("Patient ID");
+    private JLabel patientConditionLabel = new JLabel("Patient Condition");
+    private JLabel primaryCareLabel = new JLabel("Primary Care Doctor");
+    private JLabel secondaryCareLabel = new JLabel("Secondary Care Doctor");
+    private JTextField patientIDTextField = new JTextField();
+    private JTextField patientConditionTextField = new JTextField();
+    private JTextField primaryCareTextField = new JTextField();
+    private JTextField secondaryCareTextField = new JTextField();
+
+    // Department Labels and Text fields
+
+    // Procedure Labels and Text fields
+
+    // Doctor Labels and Text fields
+    private JLabel doctorIDLabel = new JLabel("Doctor ID");
+    private JLabel doctorDepartmentLabel = new JLabel("Department");
+    private JTextField doctorIDTextField = new JTextField();
+    private JTextField doctorDepartmentTextField = new JTextField();
+
+    // Medication Labels and Text fields
+
+    // Interaction Labels and Text fields
+
+    // Procedure Labels and Text fields
+
+    // Prompt for editing Patient Medications
+    private JLabel editPatientMedsLabel = new JLabel("Enter Patient ID below.  Make corrections as necessary" +
+            "and select 'Submit' to save changes.");
+
+    // Prompt for viewing Patient HeathRecord
+    private JLabel viewPatientLabel = new JLabel("Enter Patient ID below to view Health Record.");
+
+    // Prompt for viewing Department Services
+    private JLabel viewDeptSvcLabel = new JLabel("Enter Department number below to view " +
+            "services provided by that department.");
+
+    // Prompt for viewing Doctor Procedures
+    private JLabel viewDrProcLabel = new JLabel("Enter Doctor ID below to see Procedures" +
+            "performed by that Doctor.");
 
 
 
@@ -112,31 +150,50 @@ public class ClinicFrame extends JFrame{
 //            e.printStackTrace();
 //        }
         setTitle("Dr. Kanewala's Clinic System");
-        person();
+        InnerActionListener listener = new InnerActionListener();
+        clearButton.addActionListener(listener);
+        submitButton.addActionListener(listener);
+        homeButton.addActionListener(listener);
+        homePage();
 
-//*********** build out textfield array lists
     }   // end of constructor
 
+    /**
+     * Called anytime a user selects Home or Submit Buttons.  Resets the frame and creates new Layout Manager
+     */
     private void resetLayout() {
+        getContentPane().removeAll();
+        getContentPane().repaint();
         this.setLayout(new GridBagLayout());
         lManager = new GridBagConstraints();
+
         lManager.insets = new Insets(0,10,10,10);
+        buildTextFieldList();
     }
 
+    /**
+     * Builds an iterable arraylist of all text fields in the current view, in the order they appear
+     */
     private void buildTextFieldList() {
         currentPageTextFields = new ArrayList<>();
         switch (currentPage) {
             case HOME_PAGE:
                 break;
             case PATIENT:
+                currentPageTextFields.add(patientIDTextField);
                 personArrayList();
+                currentPageTextFields.add(patientConditionTextField);
+                currentPageTextFields.add(primaryCareTextField);
+                currentPageTextFields.add(secondaryCareTextField);
                 break;
             case DEPARTMENT:
-                personArrayList();
                 break;
             case PROCEDURE:
                 break;
             case DOCTOR:
+                currentPageTextFields.add(doctorIDTextField);
+                personArrayList();
+                currentPageTextFields.add(doctorDepartmentTextField);
                 break;
             case MEDICATION:
                 break;
@@ -153,8 +210,14 @@ public class ClinicFrame extends JFrame{
             case DOCTOR_PROCEDURES:
                 break;
         }
+        for (var TF : currentPageTextFields) {
+            TF.setColumns(20);
+        }
     }
 
+    /**
+     * adds the person text fields to the current textfields arraylist
+     */
     private void personArrayList() {
         currentPageTextFields.add(SSNTextField);
         currentPageTextFields.add(firstNameTextField);
@@ -171,7 +234,10 @@ public class ClinicFrame extends JFrame{
         currentPageTextFields.add(zipTextField);
     }
 
-    private void homePageLayout() {
+    /**
+     * Displays the home page
+     */
+    private void homePage() {
         currentPage = CurrPage.HOME_PAGE;
         resetLayout();
 
@@ -192,72 +258,223 @@ public class ClinicFrame extends JFrame{
         lManager.gridy = 4;
         this.add(submitButton, lManager);
         submitButton.setName("Submit");
+
+        setSize(450,450);
     }
 
-    private void person() {
+    /**
+     * Displays the Person data (standard to Patients and Doctors)
+     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
+     *          labels or other information.  Example, Patient ID.
+     */
+    private void person(int i) {
+        // i provides a buffer from the top to add text fields, ID's, information etc.
+
         resetLayout();
-        lManager.gridwidth = 2;
+        lManager.gridwidth = 4;
         lManager.gridx = 0;
         lManager.gridy = 0;
         this.add(homeButton, lManager);
 
+        lManager.gridwidth = 2;
         lManager.gridx = 0;
-        lManager.gridy = 1;
+        lManager.gridy = i + 1;
         this.add(SSNLabel, lManager);
         lManager.gridx = 2;
-        lManager.gridy = 1;
+        lManager.gridy = i + 1;
         this.add(SSNTextField, lManager);
 
         lManager.gridx = 0;
-        lManager.gridy = 2;
+        lManager.gridy = i + 2;
         this.add(firstNameLabel, lManager);
         lManager.gridx = 2;
-        lManager.gridy = 2;
+        lManager.gridy = i + 2;
         this.add(firstNameTextField, lManager);
 
         lManager.gridx = 0;
-        lManager.gridy = 3;
+        lManager.gridy = i + 3;
         this.add(mInitialLabel, lManager);
+
+        lManager.gridx = 2;
+        lManager.gridy = i + 3;
+        this.add(mInitialTextField, lManager);
+        mInitialTextField.setColumns(5);
+
         lManager.gridx = 0;
-        lManager.gridy = 4;
+        lManager.gridy = i + 4;
         this.add(lastNameLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = i + 4;
+        this.add(lastNameTextField, lManager);
+
         lManager.gridx = 0;
-        lManager.gridy = 5;
+        lManager.gridy = i + 5;
         this.add(currAddressLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = i + 5;
+        this.add(currAddressTextField, lManager);
+
         lManager.gridx = 0;
-        lManager.gridy = 6;
+        lManager.gridy = i + 6;
         this.add(currPhoneLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = i + 6;
+        this.add(currPhoneTextField, lManager);
+
         lManager.gridx = 0;
-        lManager.gridy = 7;
+        lManager.gridy = i + 7;
         this.add(permPhoneLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = i + 7;
+        this.add(permPhoneTextField, lManager);
+
         lManager.gridx = 0;
-        lManager.gridy = 8;
+        lManager.gridy = i + 8;
         this.add(DOBLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = i + 8;
+        this.add(DOBTextField, lManager);
+
         lManager.gridx = 0;
-        lManager.gridy = 9;
+        lManager.gridy = i + 9;
         this.add(sexLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = i + 9;
+        this.add(sexTextField, lManager);
+
         lManager.gridwidth = 4;
         lManager.gridx = 0;
-        lManager.gridy = 10;
+        lManager.gridy = i + 10;
         this.add(permAddressLabel, lManager);
+
         lManager.gridwidth = 2;
         lManager.gridx = 0;
-        lManager.gridy = 11;
+        lManager.gridy = i + 11;
         this.add(streetLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = i + 11;
+        this.add(streetTextField, lManager);
+
         lManager.gridx = 0;
-        lManager.gridy = 12;
+        lManager.gridy = i + 12;
         this.add(cityLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = i + 12;
+        this.add(cityTextField, lManager);
+
         lManager.gridx = 0;
-        lManager.gridy = 13;
+        lManager.gridy = i + 13;
         this.add(stateLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = i + 13;
+        this.add(stateTextField, lManager);
+        stateTextField.setColumns(5);
+
         lManager.gridx = 0;
-        lManager.gridy = 14;
+        lManager.gridy = i + 14;
         this.add(zipLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = i + 14;
+        this.add(zipTextField, lManager);
+
+
 
     }
-    private void addPatient() {
+
+    /**
+     * Displays Patient Information
+     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
+     *      *          labels or other information.  Example, Prompt for user to enter Patient ID (viewPatient method).
+     */
+    private void addPatient(int i) {
         currentPage = CurrPage.PATIENT;
+        person(2);
+
+        lManager.gridx = 0;
+        lManager.gridy = 1;
+        this.add(patientIDLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 1;
+        this.add(patientIDTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 16 + i;
+        this.add(patientConditionLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 16 + i;
+        this.add(patientConditionTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 17 + i;
+        this.add(primaryCareLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 17 + i;
+        this.add(primaryCareTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 18 + i;
+        this.add(secondaryCareLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 18 + i;
+        this.add(secondaryCareTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 19 + i;
+        this.add(clearButton, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 19 + i;
+        this.add(submitButton, lManager);
+
+        setSize(550,800);
     }
+
+    private void addDepartment(){}
+    private void addProcedure(){}
+    /**
+     * Displays Doctor Information
+     * @param i integer offset from the top of the screen.  Increase i whenever space is needed for extra textfields,
+     *      *          labels or other information.  Example, Prompt for user to enter
+     *                  Doctor ID (viewDoctorProcedures method).
+     */
+    private void addDoctor(int i){
+        currentPage = CurrPage.DOCTOR;
+
+        person(2);
+
+        lManager.gridx = 0;
+        lManager.gridy = 1;
+        this.add(doctorIDLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 1;
+        this.add(doctorIDTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 16 + i;
+        this.add(doctorDepartmentLabel, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 16 + i;
+        this.add(doctorDepartmentTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 17 + i;
+        this.add(clearButton, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 17 + i;
+        this.add(submitButton, lManager);
+
+        setSize(550,800);
+    }
+
+    private void addMedication(){}
+    private void addInteraction(){}
+    private void addProcedureInfo(){}
+    private void editPatientMedication(){}
+    private void viewPatient(){}
+    private void viewDepartmentServices(){}
+    private void viewDoctorProcedures(){}
+
+
+
 
     class InnerActionListener implements ActionListener {
         /**
@@ -268,11 +485,14 @@ public class ClinicFrame extends JFrame{
         public void actionPerformed(ActionEvent e) {
             // determine source of button click
             if (e.getSource() == clearButton) {
-                // clear form
+                for (var TF : currentPageTextFields) {
+                    TF.setText("");
+                }
 
             } else if (e.getSource() == submitButton) {
                 switch (currentPage) {
                     case HOME_PAGE:
+                        this.homePageSelection(HPUserSelectionOptions.getSelectedIndex());
                         break;
                     case PATIENT:
                         break;
@@ -297,7 +517,49 @@ public class ClinicFrame extends JFrame{
                     case DOCTOR_PROCEDURES:
                         break;
                 }
+            } else if (e.getSource() == homeButton) {
+                ClinicFrame.this.homePage();
             }
+        }
+
+        private void homePageSelection(int index) {
+            switch (index){
+                case 1:
+                    ClinicFrame.this.addPatient(2);
+                    break;
+                case 2:
+                    ClinicFrame.this.addDepartment();
+                    break;
+                case 3:
+                    ClinicFrame.this.addProcedure();
+                    break;
+                case 4:
+                    ClinicFrame.this.addDoctor(2);
+                    break;
+                case 5:
+                    ClinicFrame.this.addMedication();
+                    break;
+                case 6:
+                    ClinicFrame.this.addInteraction();
+                    break;
+                case 7:
+                    ClinicFrame.this.addProcedureInfo();
+                    break;
+                case 8:
+                    ClinicFrame.this.editPatientMedication();
+                    break;
+                case 9:
+                    ClinicFrame.this.viewPatient();
+                    break;
+                case 10:
+                    ClinicFrame.this.viewDepartmentServices();
+                    break;
+                case 11:
+                    ClinicFrame.this.viewDoctorProcedures();
+                default:
+                    break;
+            }
+
         }
     }
 }

@@ -8,7 +8,7 @@ public class Main
 		
 		//Make GUI visible
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();
+		frame.setSize(450,450);
 		frame.setVisible(true);
 
 	}
