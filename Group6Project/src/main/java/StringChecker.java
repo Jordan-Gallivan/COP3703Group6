@@ -7,4 +7,6 @@ public class StringChecker {
         }
         return true;
     }
+    
+    // eclipse test
 }
