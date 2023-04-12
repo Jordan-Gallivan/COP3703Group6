@@ -51,7 +51,7 @@ public class ClinicFrame extends JFrame{
     private JLabel HPUserSelection= new JLabel("What would you like to do?");
     private String[] HPoptions = {"","Add New Patient", "Add New Department", "Add New Procedure", "Add New Doctor",
             "Add New Medication", "Add New Interaction", "Add Patient Procedure", "Add Patient Medications",
-            "View Patient Health Record", "View Department Services", "View Procedures Completed by Doctors"};
+            "View Patient Health Record", "View Department Services", "View Procedures completed by Doctors"};
     private  JComboBox<String> HPUserSelectionOptions = new JComboBox<String>(HPoptions);
 
     // Person Labels and Text fields
@@ -84,6 +84,7 @@ public class ClinicFrame extends JFrame{
     private JTextField zipTextField = new JTextField();
 
     // Patient Labels and Text fields
+    private JLabel patientHeadingLabel = new JLabel("Enter new Patient Information below");
     private JLabel patientIDLabel = new JLabel("Patient ID");
     private JLabel patientConditionLabel = new JLabel("Patient Condition");
     private JLabel primaryCareLabel = new JLabel("Primary Care Doctor");
@@ -138,25 +139,28 @@ public class ClinicFrame extends JFrame{
     private JTextField interTimeTextField = new JTextField();
     
     // Add Procedure Labels and Text fields
-    
- 
+    private JLabel editPatientProcLabel = new JLabel("Enter Patient ID below to add a Procedure "
+    		+ "to an existing Patient and click 'Submit'");
+    private JTextField editPatientProcTextField = new JTextField(20);
+
     // Prompt for editing Patient Medications
-    private JLabel editPatientMedsLabel1 = new JLabel("Enter Patient ID below");
+    private JLabel editPatientMedsLabel1 = new JLabel("Enter Patient ID below to add a Medication "
+    		+ "to an existing Patient and click 'Submit'");
     private JLabel editPatientMedsLabel2 = new JLabel("Make corrections as necessary and select 'Submit' to save changes.");
     private JTextField patientIDforMedsTextField = new JTextField(20);
 
     // Prompt for viewing Patient HeathRecord
-    private JLabel viewPatientLabel = new JLabel("Enter Patient ID below to view Health Record.");
+    private JLabel viewPatientLabel = new JLabel("Enter Patient ID below to view Health Record and click 'Submit'");
     private JTextField patientIDforRecordTextField = new JTextField(20);
 
     // Prompt for viewing Department Services
     private JLabel viewDeptSvcLabel = new JLabel("Enter Department number below to view " +
-            "services provided by that department.");
+            "services provided and click 'Submit'");
     private JTextField deptNumforServicesTextField = new JTextField(20);
 
     // Prompt for viewing Doctor Procedures
     private JLabel viewDrProcLabel = new JLabel("Enter Doctor ID below to see Procedures" +
-            " performed by that Doctor.");
+            " performed and click 'Submit'");
     private JTextField docIDforProceduresTextField = new JTextField(20);
 
 
@@ -725,10 +729,14 @@ public class ClinicFrame extends JFrame{
         lManager.gridx = 0;
         lManager.gridy = 0;
         this.add(homeButton, lManager);
-        
+
         lManager.gridx = 0;
-        lManager.gridy = 5;
-        this.add(clearButton, lManager);
+        lManager.gridy = 1;
+        this.add(editPatientProcLabel, lManager);
+        lManager.gridx = 0;
+        lManager.gridy = 2;
+        this.add(editPatientProcTextField, lManager);
+
         lManager.gridx = 0;
         lManager.gridy = 4;
         this.add(submitButton, lManager);
@@ -738,7 +746,7 @@ public class ClinicFrame extends JFrame{
     /**
      * Edit Patient Medications
      */
-    private void editPatientMedication(){
+    private void addMedicationtoPatient(){
     	currentPage = CurrPage.PATIENT_MEDICATION;
     	resetLayout();
 
@@ -752,17 +760,20 @@ public class ClinicFrame extends JFrame{
         this.add(editPatientMedsLabel1, lManager);
         lManager.gridx = 0;
         lManager.gridy = 2;
-        this.add(editPatientMedsLabel2, lManager);
-        lManager.gridx = 0;
-        lManager.gridy = 3;
         this.add(patientIDforMedsTextField, lManager);
         
-        lManager.gridx = 0;
-        lManager.gridy = 5;
-        this.add(clearButton, lManager);
-        lManager.gridx = 0;
-        lManager.gridy = 4;
+        lManager.gridx = 1;
+        lManager.gridy = 3;
         this.add(submitButton, lManager);
+       
+        
+//        lManager.gridx = 2;
+//        lManager.gridy = 3;
+//        this.add(clearButton, lManager);
+        
+//        lManager.gridx = 0;
+//        lManager.gridy = 4;
+//        this.add(editPatientMedsLabel2, lManager);
         
         setSize(550,800);
     }
@@ -785,9 +796,6 @@ public class ClinicFrame extends JFrame{
         lManager.gridy = 2;
         this.add(patientIDforRecordTextField, lManager);
         
-        lManager.gridx = 0;
-        lManager.gridy = 4;
-        this.add(clearButton, lManager);
         lManager.gridx = 0;
         lManager.gridy = 3;
         this.add(submitButton, lManager);
@@ -815,9 +823,6 @@ public class ClinicFrame extends JFrame{
         this.add(deptNumforServicesTextField, lManager);
         
         lManager.gridx = 0;
-        lManager.gridy = 4;
-        this.add(clearButton, lManager);
-        lManager.gridx = 0;
         lManager.gridy = 3;
         this.add(submitButton, lManager);
         
@@ -844,9 +849,6 @@ public class ClinicFrame extends JFrame{
         lManager.gridy = 2;
         this.add(docIDforProceduresTextField, lManager);
         
-        lManager.gridx = 0;
-        lManager.gridy = 4;
-        this.add(clearButton, lManager);
         lManager.gridx = 0;
         lManager.gridy = 3;
         this.add(submitButton, lManager);
@@ -925,7 +927,7 @@ public class ClinicFrame extends JFrame{
                     ClinicFrame.this.addProceduretoPatient();
                     break;
                 case 8:
-                    ClinicFrame.this.editPatientMedication();
+                    ClinicFrame.this.addMedicationtoPatient();
                     break;
                 case 9:
                     ClinicFrame.this.viewPatient();
