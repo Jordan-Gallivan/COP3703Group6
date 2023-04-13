@@ -1,10 +1,15 @@
 public class StringChecker {
 
     /*
-        Manderas and Jacob, complete the methods below in accordance
-        with the assignment requirements.  No other methods should be
-        required.
-        Patient ID check is provided as an example.
+        Fix:
+            o sex check
+            o state check
+            o condition check
+            o interaction check
+            o date check
+            o time check
+            o procedure number check
+            o procedure duration check
      */
 
 
@@ -31,11 +36,9 @@ public class StringChecker {
         }
         return true;
     }
-    public static boolean DOBCheck(String s) { 
-        // complete
-        return true;
-    }
+
     public static boolean sexCheck(String s) {
+        //FIX
         if (s.length() > 10) return false;
         for (int i = 0; i < s.length(); i++) {
             if (!Character.isLetter(s.charAt(i))) return false;
@@ -43,7 +46,7 @@ public class StringChecker {
         return true;
     }
     public static boolean stateCheck(String s) {
-        // complete
+        // FIX
         return true;
     }
     public static boolean zipCheck(String s) {
@@ -54,6 +57,7 @@ public class StringChecker {
         return true;
     }
     public static boolean conditionCheck(String s) {
+        // FIX
         if (s.length() > 8) return false;
         for (int i = 0; i < s.length(); i++) {
             if (!Character.isLetter(s.charAt(i))) return false;
@@ -88,13 +92,27 @@ public class StringChecker {
     }
 
     // Interaction Checks
-    public static boolean dateTimeCheck(String s) {
-        // complete
+    public static boolean interactionIDCheck(String s) {
+        // verify integer
+        return true;
+    }
+    public static boolean dateCheck(String s) {
+        // Needs to be MM-DD-YYYY
+        // 1<= MM <= 12
+        // 1<= DD <= 31
+        // 1900 <= YYYY <= 2500
+        return true;
+    }
+    public static boolean timeCheck(String s) {
+        // Needs to be HHMM (24hour clock)
+        // 00 <= HH <= 23
+        // 00 <= MM <= 59
         return true;
     }
 
     // Procedure Checks
     public static boolean procedureNumberCheck(String s) {
+        // FIX
         if(s.length() != 7) return false;
         for (int i = 0; i < s.length(); i++) {
             if (!Character.isDigit(s.charAt(i))) return false;
@@ -102,11 +120,13 @@ public class StringChecker {
         return true;
     }
 
-    // Prescription Checks
-    public static boolean dateCheck(String s) {
-        // complete
+    public static boolean procedureDurationCheck(String s) {
+        // verify positive number (double precision floating point)
         return true;
     }
+
+    // Prescription Checks
+
 
 
     

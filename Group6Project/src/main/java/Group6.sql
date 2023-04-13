@@ -63,12 +63,12 @@ create table PATIENT (
          primary key (Pt_ID),
      constraint PATIENT_SSN_FK
          foreign key (SSN) references PERSON(SSN)
-             on delete SET NULL
-             on update CASCADE,
+             on delete SET NULL,
+--              on update CASCADE,
      constraint PATIENT_PRIDR_FK
          foreign key (Pri_Care_Dr) references DOCTOR(Dr_ID)
-             on delete SET NULL
-             on update CASCADE,
+             on delete SET NULL,
+--              on update CASCADE,
      constraint PATIENT_SECDR_FK
          foreign key (Sec_Care_Dr) references DOCTOR(Dr_ID)
              on delete SET NULL
@@ -84,9 +84,9 @@ create table DOCTOR (
         primary key (Dr_ID),
     constraint DOCTOR_SSN_FK
         foreign key (SSN) references PERSON(SSN)
-            on delete SET NULL
+            on delete SET NULL,
     --             on update CASCADE,
-            constraint DOCTOR_DEPT_FK
+    constraint DOCTOR_DEPT_FK
             foreign key (Dept) references DEPARTMENT(Dept_Code)
             on delete SET NULL
     --             on update CASCADE
@@ -125,13 +125,13 @@ Create table PROCEDURE (
     Proc_Num   CHAR(7) not null,
     Proc_Name  VARCHAR(50) not null,
     Description VARCHAR(50)  not null,
-    Duration   real not null,
+    Duration   float not null,
     Proc_Dept   VARCHAR(4), not null,
 
     constraint PROCEDURE_PK
         primary key(Proc_Num),
     constraint PROCEDURE_FK_DEPT
-        foreign key Proc_Dept references DEPARTMENT(Dept_code)
+        foreign key (Proc_Dept) references DEPARTMENT(Dept_code)
         on delete SET NULL
 );
 
@@ -140,11 +140,11 @@ create table PERFORMS(
     Proc        CHAR(7) not null,
 
     constraint PERFORMS_FK_DR
-        foreign key Proc_Dr references DOCTOR(Dr_ID)
+        foreign key (Proc_Dr) references DOCTOR(Dr_ID)
         on delete SET NULL,
     constraint PERFORMS_FK_PROC
-        foreign key Proc references PROCEDURE(Proc_Num)
-            on delete SET NULL,
+        foreign key (Proc) references PROCEDURE(Proc_Num)
+            on delete SET NULL
 
 );
 create table PRESCRIBED_MEDICINE (
@@ -160,7 +160,7 @@ create table PRESCRIPTION (
     Pres_Dr CHAR(9) not null,
     Pres_Rx VARCHAR(15) not null,
     Pres_Pt CHAR(9) not null,
-    Date_Rx  DATE  not null,
+    Date_Rx  CHAR(10)  not null,
 
     constraint PRESCRIPTION_FK_DR
         foreign key (Pres_Dr) references DOCTOR(Dr_ID)
@@ -177,6 +177,7 @@ create table UNDERGOES (
     Proc_Num    CHAR(7) not null,
     Proc_Notes  VARCHAR(200),
     Proc_Date  CHAR(10),
+    Proc_Time CHAR(4),
 
     constraint UNDERGOES_FK_PT
         foreign key (Proc_Pt) references PATIENT(Pt_ID)

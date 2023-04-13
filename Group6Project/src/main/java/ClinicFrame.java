@@ -14,13 +14,15 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 /*TO DO:
- * 1. Change Procedure Duration TextField to a formatted time/date situation
- * 2. Change add Interaction  Date and Time TextFields to formatted time/date situations
- * 3. Figure out what needs to go in Add Patient Procedure
- * 4. Find out how to add procedures to doctors
- *      add to doctor page
- *          -> will require a second ADD() for SQL
- * 5.
+ * x. Change Procedure Duration TextField to a formatted time/date situation
+ * x. Change add Interaction  Date and Time TextFields to formatted time/date situations
+ * x. Figure out what needs to go in Add Patient Procedure
+ * x. Find out how to add procedures to doctors
+ * 5. Check all fields that have specific formatting requirements
+ *      -> per StringChecker
+ * 6. Call add_____SQL methods for respective pages when submit button pressed
+ * 7. Generate Queries for pages that request information
+ * 8. Call query_______ methods for respective pages when submit button pressed
  */
 
 public class ClinicFrame extends JFrame{
@@ -124,11 +126,13 @@ public class ClinicFrame extends JFrame{
     private JLabel procDescLabel = new JLabel("Procedure Description");
     private JLabel procDurationLabel = new JLabel("Procedure Duration");
     private JLabel procDepartmentLabel = new JLabel("Procedure Department");
+    private JLabel procDrLabel = new JLabel("Procedure Doctor");
     private JTextField procNumberTextField = new JTextField();
     private JTextField procNameTextField = new JTextField();
     private JTextField procDescTextField = new JTextField();
     private JTextField procDurationTextField = new JTextField();
     private JTextField procDepartmentTextField = new JTextField();
+    private JTextField procDrTextField = new JTextField();
 
     // Doctor Labels and Text fields
     private JLabel doctorIDLabel = new JLabel("Doctor ID");
@@ -159,7 +163,7 @@ public class ClinicFrame extends JFrame{
     private JTextField interTimeTextField = new JTextField();
     private JTextField interDescTextField = new JTextField();
 
-    // Add Procedure Labels and Text fields
+    // Add Patient Procedure Labels and Text fields
     private JLabel procPatientLabel = new JLabel("Patient ID");
     private JLabel procPatientNumberLabel = new JLabel("Procedure Number");
     private JLabel procNotesLabel = new JLabel("Procedure Notes");
@@ -232,9 +236,10 @@ public class ClinicFrame extends JFrame{
     }   // end of constructor
 
 
-
+    /**
+     * Connects to Oracle DB
+     */
     private void connectToDB(){
-
         try {
             //Load JDBC driver
             Class.forName("Oracle.jdbc.driver.OracleDriver");
@@ -255,6 +260,10 @@ public class ClinicFrame extends JFrame{
             e.printStackTrace();
         }
     }
+
+    /**
+     * Disconnects from Oracle DB
+     */
     public void disconnectFromDB(){
 ///////////////////////// uncomment prior to submission //////////////////////////
 //        System.out.println("This is successful");
@@ -331,6 +340,7 @@ public class ClinicFrame extends JFrame{
                 currentPageTextFields.add(procNotesTextField);
                 currentPageTextFields.add(procDateTextField);
                 currentPageTextFields.add(procTimeTextField);
+                currentPageTextFields.add(procDrTextField);
                 break;
             case PATIENT_MEDICATION:
                 currentPageTextFields.add(prescDrTextField);
@@ -670,9 +680,16 @@ public class ClinicFrame extends JFrame{
 
         lManager.gridx = 0;
         lManager.gridy = 7;
-        this.add(clearButton, lManager);
+        this.add(procDrLabel, lManager);
         lManager.gridx = 1;
         lManager.gridy = 7;
+        this.add(procDrTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 8;
+        this.add(clearButton, lManager);
+        lManager.gridx = 1;
+        lManager.gridy = 8;
         this.add(submitButton, lManager);
 
         setSize(550,800);
@@ -1051,6 +1068,10 @@ public class ClinicFrame extends JFrame{
         setSize(550,800);
     }
 
+    /**
+     * Limits the characters the user can input into each textfield per
+     * TABLE limitations
+     */
     private void setCharLimits() {
         // Person Labels and Text fields
         SSNTextField.setDocument(new CharLimit(9));
@@ -1130,10 +1151,23 @@ public class ClinicFrame extends JFrame{
                 "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         pstmt.setString(1, SSNTextField.getText());
         pstmt.setString(2, firstNameTextField.getText());
-        pstmt.setString(3, mInitialTextField.getText());
+        if (mInitialTextField.getText().equals(""))
+            pstmt.setNull(3,Types.NULL);
+        else
+            pstmt.setString(3, mInitialTextField.getText());
+
         pstmt.setString(4, lastNameTextField.getText());
-        pstmt.setString(5, currAddressTextField.getText());
-        pstmt.setString(6, currPhoneTextField.getText());
+
+        if (currAddressTextField.getText().equals(""))
+            pstmt.setNull(5,Types.NULL);
+        else
+            pstmt.setString(5, currAddressTextField.getText());
+
+        if (currPhoneTextField.getText().equals(""))
+            pstmt.setNull(6,Types.NULL);
+        else
+            pstmt.setString(6, currPhoneTextField.getText());
+
         pstmt.setString(7, permPhoneTextField.getText());
         pstmt.setString(8, DOBTextField.getText());
         pstmt.setString(9, sexTextField.getText());
@@ -1145,7 +1179,10 @@ public class ClinicFrame extends JFrame{
 
         // add null values for MInitial, curr_address, Curr_phone
     }
-
+    /**
+     * Adds tuple to PATIENT Table.
+     * @throws SQLException
+     */
     private void addPatientSQL() throws SQLException {
         addPersonSQL();
         PreparedStatement pstmt = conn.prepareStatement("INSERT INTO PATIENT " +
@@ -1161,26 +1198,126 @@ public class ClinicFrame extends JFrame{
         pstmt.executeUpdate();
 
     }
+    /**
+     * Adds tuple to DOCTOR Table.
+     * @throws SQLException
+     */
     private void addDoctorSQL() throws SQLException {
         addPersonSQL();
         PreparedStatement pstmt = conn.prepareStatement("INSERT INTO DOCTOR " +
                 "VALUES(?, ?, ?)");
         pstmt.setString(1, SSNTextField.getText());
-        pstmt.setString(2, patientIDTextField.getText());
-        pstmt.setString(3, patientConditionTextField.getText());
-        /*
-            private JTextField doctorIDTextField = new JTextField();
-    private JTextField doctorDepartmentTextField = new JTextField();
-    private JTextField doctorProceduresTextField = new JTextField();
-         */
+        pstmt.setString(2, doctorIDTextField.getText());
+        pstmt.setString(3, doctorDepartmentTextField.getText());
+        pstmt.executeUpdate();
     }
-    private void addDepartmentSQL() {}
-    private void addInteractionSQL() {}
-    private void addProcedureSQL() {}
-    private void addPerformsSQL() {}
-    private void addPrescribedMedSQL(){}
-    private void addPrescriptionSQL(){}
-    private void addUndergoesSQL(){}
+    /**
+     * Adds tuple to DEPARTMENT Table.
+     * @throws SQLException
+     */
+    private void addDepartmentSQL() throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement("INSERT INTO DEPARTMENT " +
+                "VALUES(?, ?, ?, ?, ?)");
+        pstmt.setString(1, deptCodeTextField.getText());
+        pstmt.setString(2, deptNameTextField.getText());
+        pstmt.setString(3, deptOfficeTextField.getText());
+
+        if (deptPhoneTextField.getText().equals(""))
+            pstmt.setNull(4, Types.NULL);
+        else
+            pstmt.setString(4, deptPhoneTextField.getText());
+
+        pstmt.setString(5, deptHeadTextField.getText());
+
+        pstmt.executeUpdate();
+    }
+    /**
+     * Adds tuple to INTERACTION Table.
+     * @throws SQLException
+     */
+    private void addInteractionSQL() throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement("INSERT INTO INTERACTION " +
+                "VALUES(?, ?, ?, ?, ?)");
+        pstmt.setInt(1, Integer.parseInt(interIDTextField.getText()));
+        pstmt.setString(2, interPatientTextField.getText());
+        pstmt.setString(3, interDateField.getText());
+        pstmt.setString(4, interTimeTextField.getText());
+        pstmt.setString(5, interDescTextField.getText());
+
+        pstmt.executeUpdate();
+    }
+    /**
+     * Adds tuple to PROCEDURE Table.
+     * @throws SQLException
+     */
+    private void addProcedureSQL() throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement("INSERT INTO PROCEDURE " +
+                "VALUES(?, ?, ?, ?, ?)");
+        pstmt.setString(1, procNumberTextField.getText());
+        pstmt.setString(2, procNameTextField.getText());
+        pstmt.setString(3, procDescTextField.getText());
+        pstmt.setFloat(4, Float.parseFloat(procDurationTextField.getText()));
+        pstmt.setString(5, procDepartmentTextField.getText());
+        pstmt.executeUpdate();
+
+        addPerformsSQL(procDrTextField.getText(), procNumberTextField.getText());
+
+    }
+    /**
+     * Adds tuple to PERFORMS Table. Called by addProcedureSQL
+     * @throws SQLException
+     */
+    private void addPerformsSQL(String dr, String proc) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement("INSERT INTO PERFORMS " +
+                "VALUES(?, ?)");
+        pstmt.setString(1, dr);
+        pstmt.setString(2, proc);
+        pstmt.executeUpdate();
+    }
+    /**
+     * Adds tuple to PRESCRIBED_MEDICINE Table.
+     * @throws SQLException
+     */
+    private void addPrescribedMedSQL() throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement("INSERT INTO PRESCRIBED_MEDICINE " +
+                "VALUES(?, ?, ?)");
+        pstmt.setString(1, medNameTextField.getText());
+        pstmt.setString(2, medManufacturerTextField.getText());
+        pstmt.setString(3, medDescTextField.getText());
+
+        pstmt.executeUpdate();
+    }
+    /**
+     * Adds tuple to PRESCRIPTION Table.
+     * @throws SQLException
+     */
+    private void addPrescriptionSQL() throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement("INSERT INTO PRESCRIPTION " +
+                "VALUES(?, ?, ?, ?)");
+        pstmt.setString(1, prescDrTextField.getText());
+        pstmt.setString(2, prescMedTextField.getText());
+        pstmt.setString(3, prescPatientTextField.getText());
+        pstmt.setString(4, prescDateTextField.getText());
+
+        pstmt.executeUpdate();
+
+    }
+    /**
+     * Adds tuple to UNDERGOES Table.
+     * @throws SQLException
+     */
+    private void addUndergoesSQL() throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement("INSERT INTO UNDERGOES " +
+                "VALUES(?, ?, ?, ?, ?)");
+        pstmt.setString(1, procPatientTextField.getText());
+        pstmt.setString(2, procPatientNumberTextField.getText());
+        pstmt.setString(3, procNotesTextField.getText());
+        pstmt.setString(4, procDateTextField.getText());
+        pstmt.setString(5, procTimeTextField.getText());
+
+        pstmt.executeUpdate();
+
+    }
 
 
 
