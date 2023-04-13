@@ -39,8 +39,8 @@ create table PERSON (
     FName VARCHAR(15) not null,
     MInitial CHAR(1),
     LName VARCHAR(15) not null,
-    Curr_address VARCHAR(50) not null,
-    Curr_phone CHAR(10) not null,
+    Curr_address VARCHAR(50),
+    Curr_phone CHAR(10),
     Perm_phone CHAR(10) not null,        -- need to format output to be xxx-xxx-xxxx
     DOB CHAR(10) not null,      -- need to format to MM-DD-YYYY
     Sex VARCHAR(10) not null,

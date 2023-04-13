@@ -1,11 +1,17 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import javax.print.DocFlavor;
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Types;
 
 /*TO DO:
  * 1. Change Procedure Duration TextField to a formatted time/date situation
@@ -18,6 +24,9 @@ import javax.swing.text.PlainDocument;
  */
 
 public class ClinicFrame extends JFrame{
+
+    // Connection Variable
+    Connection conn;
 
     // Layout, Constraints, Janel;
     GridBagLayout layout;
@@ -128,7 +137,7 @@ public class ClinicFrame extends JFrame{
             "(separated by a comma)");
     private JTextField doctorIDTextField = new JTextField();
     private JTextField doctorDepartmentTextField = new JTextField();
-    private JTextField doctorProceduresTextField = new JTextField();
+
 
     // Medication Labels and Text fields
     private JLabel medNameLabel = new JLabel("Medication Name");
@@ -198,33 +207,7 @@ public class ClinicFrame extends JFrame{
 
     public ClinicFrame() {
         // Connect to server
-//        try {
-//            //Load JDBC driver
-//            Class.forname("Oracle.jdbc.driver.oracleDriver");
-//        } catch (ClassNotFoundException e){
-//            e.printStackTrace();
-//        }
-//
-//        String serverName = "cisvm-oracle.unfcsd.unf.edu";
-//        String portNumber = "1521";
-//        String sid = "orcl";
-//        String url = "jdbc:oracle:thin:@cisvm-oracle.unfcsd.unf.edu:1521:orcl";
-//        String username ="G6"
-//        String password ="G6Spring2023"
-//        try {
-//            //Create a connection using given url,username and password
-//            Connection conn = DriverManager.getConnection(url, username, password);
-//
-//            boolean reachable = conn.isValid(10);/
-//
-//            if(reachable) {
-//
-//                System.out.println("Successfully connected");
-//                conn.close();
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+
         setTitle("Dr. Kanewala's Clinic System");
         InnerActionListener listener = new InnerActionListener();
         clearButton.addActionListener(listener);
@@ -233,7 +216,54 @@ public class ClinicFrame extends JFrame{
         setCharLimits();
         homePage();
 
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                disconnectFromDB();
+                System.exit(0);
+            }
+        });
+
+///////////////////////////////// PRIOR TO SUBMISSION //////////////////
+        // uncomment the disconnetFromDB method
+        // uncomment the below line
+//        connectToDB();
+
+
     }   // end of constructor
+
+
+
+    private void connectToDB(){
+
+        try {
+            //Load JDBC driver
+            Class.forName("Oracle.jdbc.driver.OracleDriver");
+        } catch (ClassNotFoundException e){
+            e.printStackTrace();
+        }
+
+        String serverName = "cisvm-oracle.unfcsd.unf.edu";
+        String portNumber = "1521";
+        String sid = "orcl";
+        String url = "jdbc:oracle:thin:@cisvm-oracle.unfcsd.unf.edu:1521:orcl";
+        String username ="G6";
+        String password ="G6Spring2023";
+        try {
+            //Create a connection using given url,username and password
+            conn = DriverManager.getConnection(url, username, password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void disconnectFromDB(){
+///////////////////////// uncomment prior to submission //////////////////////////
+//        System.out.println("This is successful");
+//        try {
+//            conn.close();
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+    }
 
     /**
      * Called anytime a user selects Home or Submit Buttons.  Resets the frame and creates new Layout Manager
@@ -282,7 +312,6 @@ public class ClinicFrame extends JFrame{
                 currentPageTextFields.add(doctorIDTextField);
                 personArrayList();
                 currentPageTextFields.add(doctorDepartmentTextField);
-                currentPageTextFields.add(doctorProceduresTextField);
                 break;
             case MEDICATION:
             	currentPageTextFields.add(medNameTextField);
@@ -675,12 +704,12 @@ public class ClinicFrame extends JFrame{
         lManager.gridy = 17 + i;
         this.add(doctorDepartmentTextField, lManager);
 
-        lManager.gridx = 0;
-        lManager.gridy = 18 + i;
-        this.add(doctorProceduresLabel, lManager);
-        lManager.gridx = 2;
-        lManager.gridy = 18 + i;
-        this.add(doctorProceduresTextField, lManager);
+//        lManager.gridx = 0;
+//        lManager.gridy = 18 + i;
+//        this.add(doctorProceduresLabel, lManager);
+//        lManager.gridx = 2;
+//        lManager.gridy = 18 + i;
+//        this.add(doctorProceduresTextField, lManager);
 
         lManager.gridx = 0;
         lManager.gridy = 19 + i;
@@ -1091,6 +1120,69 @@ public class ClinicFrame extends JFrame{
         // view department services
         deptSvcCode.setDocument(new CharLimit(4));
     }
+
+    /**
+     * Adds tuple to PERSON Table.  Called in addPatinetSQL and addDoctorSQL
+     * @throws SQLException
+     */
+    private void addPersonSQL() throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement("INSERT INTO PERSON " +
+                "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        pstmt.setString(1, SSNTextField.getText());
+        pstmt.setString(2, firstNameTextField.getText());
+        pstmt.setString(3, mInitialTextField.getText());
+        pstmt.setString(4, lastNameTextField.getText());
+        pstmt.setString(5, currAddressTextField.getText());
+        pstmt.setString(6, currPhoneTextField.getText());
+        pstmt.setString(7, permPhoneTextField.getText());
+        pstmt.setString(8, DOBTextField.getText());
+        pstmt.setString(9, sexTextField.getText());
+        pstmt.setString(10, streetTextField.getText());
+        pstmt.setString(11, cityTextField.getText());
+        pstmt.setString(12, stateTextField.getText());
+        pstmt.setString(13, zipTextField.getText());
+        pstmt.executeUpdate();
+
+        // add null values for MInitial, curr_address, Curr_phone
+    }
+
+    private void addPatientSQL() throws SQLException {
+        addPersonSQL();
+        PreparedStatement pstmt = conn.prepareStatement("INSERT INTO PATIENT " +
+                "VALUES(?, ?, ?, ?, ?)");
+        pstmt.setString(1, SSNTextField.getText());
+        pstmt.setString(2, patientIDTextField.getText());
+        pstmt.setString(3, patientConditionTextField.getText());
+        pstmt.setString(4, primaryCareTextField.getText());
+        if (primaryCareTextField.getText().equals(""))
+            pstmt.setNull(5, Types.NULL);
+        else
+            pstmt.setString(5, secondaryCareTextField.getText());
+        pstmt.executeUpdate();
+
+    }
+    private void addDoctorSQL() throws SQLException {
+        addPersonSQL();
+        PreparedStatement pstmt = conn.prepareStatement("INSERT INTO DOCTOR " +
+                "VALUES(?, ?, ?)");
+        pstmt.setString(1, SSNTextField.getText());
+        pstmt.setString(2, patientIDTextField.getText());
+        pstmt.setString(3, patientConditionTextField.getText());
+        /*
+            private JTextField doctorIDTextField = new JTextField();
+    private JTextField doctorDepartmentTextField = new JTextField();
+    private JTextField doctorProceduresTextField = new JTextField();
+         */
+    }
+    private void addDepartmentSQL() {}
+    private void addInteractionSQL() {}
+    private void addProcedureSQL() {}
+    private void addPerformsSQL() {}
+    private void addPrescribedMedSQL(){}
+    private void addPrescriptionSQL(){}
+    private void addUndergoesSQL(){}
+
+
 
     class CharLimit extends PlainDocument {
         private int limit;
