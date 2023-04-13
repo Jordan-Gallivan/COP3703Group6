@@ -102,10 +102,12 @@ public class ClinicFrame extends JFrame{
     private JLabel deptNameLabel = new JLabel("Department Name");
     private JLabel deptOfficeLabel = new JLabel("Department Office Number");
     private JLabel deptPhoneLabel = new JLabel("Department Office Phone");
+    private JLabel deptHeadLabel = new JLabel("Department Head");
     private JTextField deptCodeTextField = new JTextField();
     private JTextField deptNameTextField = new JTextField();
     private JTextField deptOfficeTextField = new JTextField();
     private JTextField deptPhoneTextField = new JTextField();
+    private JTextField deptHeadTextField = new JTextField();
     
     // Procedure Labels and Text fields
     private JLabel procNumberLabel = new JLabel("Procedure Number");
@@ -181,9 +183,11 @@ public class ClinicFrame extends JFrame{
     private JTextArea patientMedicationsTextArea = new JTextArea();
 
     // Prompt for viewing Department Services
-    private JLabel viewDeptSvcLabel = new JLabel("Enter Department number below to view " +
+    private JLabel viewDeptSvcLabel = new JLabel("Enter Department code to view " +
             "services provided and click 'Submit'");
-    private JTextField deptNumforServicesTextField = new JTextField(20);
+    private JLabel deptSvcOfferedLabel = new JLabel("This department offers the below services:");
+    private JTextField deptSvcCode = new JTextField(20);
+    private JTextArea deptSvcOfferedTextArea = new JTextArea();
 
     // Prompt for viewing Doctor Procedures
     private JLabel viewDrProcLabel = new JLabel("Enter Doctor ID below to see Procedures" +
@@ -226,6 +230,7 @@ public class ClinicFrame extends JFrame{
         clearButton.addActionListener(listener);
         submitButton.addActionListener(listener);
         homeButton.addActionListener(listener);
+        setCharLimits();
         homePage();
 
     }   // end of constructor
@@ -251,6 +256,7 @@ public class ClinicFrame extends JFrame{
         switch (currentPage) {
             case HOME_PAGE:
                 break;
+            case HEALTH_RECORD:
             case PATIENT:
                 currentPageTextFields.add(patientIDTextField);
                 personArrayList();
@@ -263,6 +269,7 @@ public class ClinicFrame extends JFrame{
                 currentPageTextFields.add(deptNameTextField);
                 currentPageTextFields.add(deptOfficeTextField);
                 currentPageTextFields.add(deptPhoneTextField);
+                currentPageTextFields.add(deptHeadTextField);
                 break;
             case PROCEDURE:
             	currentPageTextFields.add(procNumberTextField);
@@ -302,9 +309,8 @@ public class ClinicFrame extends JFrame{
                 currentPageTextFields.add(prescPatientTextField);
                 currentPageTextFields.add(prescDateTextField);
                 break;
-            case HEALTH_RECORD:
-                break;
             case DEPARTMENT_SERVICES:
+                currentPageTextFields.add(deptSvcCode);
                 break;
             case DOCTOR_PROCEDURES:
                 break;
@@ -567,12 +573,19 @@ public class ClinicFrame extends JFrame{
         lManager.gridx = 1;
         lManager.gridy = 4;
         this.add(deptPhoneTextField, lManager);
-        
+
         lManager.gridx = 0;
         lManager.gridy = 5;
-        this.add(clearButton, lManager);
+        this.add(deptHeadLabel, lManager);
         lManager.gridx = 1;
         lManager.gridy = 5;
+        this.add(deptHeadTextField, lManager);
+        
+        lManager.gridx = 0;
+        lManager.gridy = 6;
+        this.add(clearButton, lManager);
+        lManager.gridx = 1;
+        lManager.gridy = 6;
         this.add(submitButton, lManager);
         
         setSize(550,800);
@@ -944,24 +957,42 @@ public class ClinicFrame extends JFrame{
     	currentPage = CurrPage.DEPARTMENT_SERVICES;
     	resetLayout();
     
-    	lManager.gridwidth = 2;
+    	lManager.gridwidth = 4;
         lManager.gridx = 0;
         lManager.gridy = 0;
         this.add(homeButton, lManager);
-        
+
+        lManager.gridwidth = 2;
         lManager.gridx = 0;
         lManager.gridy = 1;
         this.add(viewDeptSvcLabel, lManager);
-        lManager.gridx = 0;
-        lManager.gridy = 2;
-        this.add(deptNumforServicesTextField, lManager);
-        
+        lManager.gridx = 2;
+        lManager.gridy = 1;
+        this.add(deptSvcCode, lManager);
+
+        deptSvcOfferedTextArea.setColumns(40);
+        deptSvcOfferedTextArea.setRows(8);
+        lManager.gridwidth = 4;
         lManager.gridx = 0;
         lManager.gridy = 3;
+        this.add(deptSvcOfferedLabel, lManager);
+        lManager.gridheight = 7;
+        lManager.gridx = 0;
+        lManager.gridy = 4;
+        this.add(deptSvcOfferedTextArea, lManager);
+
+
+        lManager.gridwidth = 2;
+        lManager.gridheight = 1;
+        lManager.gridx = 0;
+        lManager.gridy = 12;
         this.add(submitButton, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 12;
+        this.add(clearButton, lManager);
         
         
-        setSize(550,800);
+        setSize(1000,800);
     }
     /**
      * View the Procedures any Doctor has done by Doctor ID
@@ -993,82 +1024,72 @@ public class ClinicFrame extends JFrame{
 
     private void setCharLimits() {
         // Person Labels and Text fields
-
-        CharLimit lim1 = new CharLimit(1);
-        CharLimit lim2 = new CharLimit(2);
-        CharLimit lim4 = new CharLimit(4);
-        CharLimit lim5 = new CharLimit(5);
-        CharLimit lim7 = new CharLimit(7);
-        CharLimit lim8 = new CharLimit(8);
-        CharLimit lim9 = new CharLimit(9);
-        CharLimit lim10 = new CharLimit(10);
-        CharLimit lim15 = new CharLimit(15);
-        CharLimit lim50 = new CharLimit(50);
-        CharLimit lim150 = new CharLimit(150);
-        CharLimit lim200 = new CharLimit(200);
-
-        SSNTextField.setDocument(lim9);
-        firstNameTextField.setDocument(lim15);
-        mInitialTextField.setDocument(lim1);
-        lastNameTextField.setDocument(lim15);
-        currAddressTextField.setDocument(lim50);
-        currPhoneTextField.setDocument(lim10);
-        permPhoneTextField.setDocument(lim10);
-        DOBTextField.setDocument(lim10);
-        sexTextField.setDocument(lim10);
-        streetTextField.setDocument(lim15);
-        cityTextField.setDocument(lim15);
-        stateTextField.setDocument(lim2);
-        zipTextField.setDocument(lim5);
+        SSNTextField.setDocument(new CharLimit(9));
+        firstNameTextField.setDocument(new CharLimit(15));
+        mInitialTextField.setDocument(new CharLimit(1));
+        lastNameTextField.setDocument(new CharLimit(15));
+        currAddressTextField.setDocument(new CharLimit(50));
+        currPhoneTextField.setDocument(new CharLimit(10));
+        permPhoneTextField.setDocument(new CharLimit(10));
+        DOBTextField.setDocument(new CharLimit(10));
+        sexTextField.setDocument(new CharLimit(10));
+        streetTextField.setDocument(new CharLimit(15));
+        cityTextField.setDocument(new CharLimit(15));
+        stateTextField.setDocument(new CharLimit(2));
+        zipTextField.setDocument(new CharLimit(5));
 
         // Patient Labels and Text fields
-        patientIDTextField.setDocument(lim9);
-        patientConditionTextField.setDocument(lim8);
-        primaryCareTextField.setDocument(lim9);
-        secondaryCareTextField.setDocument(lim9);
+        patientIDTextField.setDocument(new CharLimit(9));
+        patientConditionTextField.setDocument(new CharLimit(8));
+        primaryCareTextField.setDocument(new CharLimit(9));
+        secondaryCareTextField.setDocument(new CharLimit(9));
 
         // Department Labels and Text fields
-        deptCodeTextField.setDocument(lim4);
-        deptNameTextField.setDocument(lim15);
-        deptOfficeTextField.setDocument(lim4);
-        deptPhoneTextField.setDocument(lim10);
+        deptCodeTextField.setDocument(new CharLimit(4));
+        deptNameTextField.setDocument(new CharLimit(15));
+        deptOfficeTextField.setDocument(new CharLimit(4));
+        deptPhoneTextField.setDocument(new CharLimit(10));
+        deptHeadTextField.setDocument(new CharLimit(9));
 
         // Procedure Labels and Text fields
-        procNumberTextField.setDocument(lim7);
-        procNameTextField.setDocument(lim50);
-        procDescTextField.setDocument(lim50);
+        procNumberTextField.setDocument(new CharLimit(7));
+        procNameTextField.setDocument(new CharLimit(50));
+        procDescTextField.setDocument(new CharLimit(50));
 //        procDurationTextField.setDocument();
-        procDepartmentTextField.setDocument(lim4);
+        procDepartmentTextField.setDocument(new CharLimit(4));
 
         // Doctor Labels and Text fields
-        doctorIDTextField.setDocument(lim9);
-        doctorDepartmentTextField.setDocument(lim9);
+        doctorIDTextField.setDocument(new CharLimit(9));
+        doctorDepartmentTextField.setDocument(new CharLimit(4));
 //        doctorProceduresTextField.setDocument();
 
         // Medication Labels and Text fields
-        medNameTextField.setDocument(lim15);
-        medDescTextField.setDocument(lim50);
-        medManufacturerTextField.setDocument(lim15);
+        medNameTextField.setDocument(new CharLimit(15));
+        medDescTextField.setDocument(new CharLimit(50));
+        medManufacturerTextField.setDocument(new CharLimit(15));
 
         // Interaction Labels and Text fields
 //        interIDTextField.setDocument();
-        interPatientTextField.setDocument(lim9);
-        interDateField.setDocument(lim10);
-        interTimeTextField.setDocument(lim4);
-        interDescTextField.setDocument(lim150);
+        interPatientTextField.setDocument(new CharLimit(9));
+        interDateField.setDocument(new CharLimit(10));
+        interTimeTextField.setDocument(new CharLimit(4));
+        interDescTextField.setDocument(new CharLimit(150));
 
         // Add Procedure Labels and Text fields
-        procPatientTextField.setDocument(lim9);
-        procPatientNumberTextField.setDocument(lim7);
-        procNotesTextField.setDocument(lim200);
-        procDateTextField.setDocument(lim10);
-        procTimeTextField.setDocument(lim4);
+        procPatientTextField.setDocument(new CharLimit(9));
+        procPatientNumberTextField.setDocument(new CharLimit(7));
+        procNotesTextField.setDocument(new CharLimit(200));
+        procDateTextField.setDocument(new CharLimit(10));
+        procTimeTextField.setDocument(new CharLimit(4));
 
         // Prompt for adding Patient Medications
-        prescDrTextField.setDocument(lim9);
-        prescMedTextField.setDocument(lim15);
-        prescPatientTextField.setDocument(lim9);
-        prescDateTextField.setDocument(lim10);
+        prescDrTextField.setDocument(new CharLimit(9));
+        prescMedTextField.setDocument(new CharLimit(15));
+        prescPatientTextField.setDocument(new CharLimit(9));
+        prescDateTextField.setDocument(new CharLimit(10));
+
+        // view department services
+        deptSvcCode.setDocument(new CharLimit(4));
     }
 
     class CharLimit extends PlainDocument {
