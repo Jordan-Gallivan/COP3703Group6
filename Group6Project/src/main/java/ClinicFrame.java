@@ -3,6 +3,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
 /*TO DO:
  * 1. Change Procedure Duration TextField to a formatted time/date situation
@@ -383,6 +386,7 @@ public class ClinicFrame extends JFrame{
         lManager.gridx = 2;
         lManager.gridy = i + 2;
         this.add(firstNameTextField, lManager);
+
 
         lManager.gridx = 0;
         lManager.gridy = i + 3;
@@ -985,6 +989,99 @@ public class ClinicFrame extends JFrame{
         
         
         setSize(550,800);
+    }
+
+    private void setCharLimits() {
+        // Person Labels and Text fields
+
+        CharLimit lim1 = new CharLimit(1);
+        CharLimit lim2 = new CharLimit(2);
+        CharLimit lim4 = new CharLimit(4);
+        CharLimit lim5 = new CharLimit(5);
+        CharLimit lim7 = new CharLimit(7);
+        CharLimit lim8 = new CharLimit(8);
+        CharLimit lim9 = new CharLimit(9);
+        CharLimit lim10 = new CharLimit(10);
+        CharLimit lim15 = new CharLimit(15);
+        CharLimit lim50 = new CharLimit(50);
+        CharLimit lim150 = new CharLimit(150);
+        CharLimit lim200 = new CharLimit(200);
+
+        SSNTextField.setDocument(lim9);
+        firstNameTextField.setDocument(lim15);
+        mInitialTextField.setDocument(lim1);
+        lastNameTextField.setDocument(lim15);
+        currAddressTextField.setDocument(lim50);
+        currPhoneTextField.setDocument(lim10);
+        permPhoneTextField.setDocument(lim10);
+        DOBTextField.setDocument(lim10);
+        sexTextField.setDocument(lim10);
+        streetTextField.setDocument(lim15);
+        cityTextField.setDocument(lim15);
+        stateTextField.setDocument(lim2);
+        zipTextField.setDocument(lim5);
+
+        // Patient Labels and Text fields
+        patientIDTextField.setDocument(lim9);
+        patientConditionTextField.setDocument(lim8);
+        primaryCareTextField.setDocument(lim9);
+        secondaryCareTextField.setDocument(lim9);
+
+        // Department Labels and Text fields
+        deptCodeTextField.setDocument(lim4);
+        deptNameTextField.setDocument(lim15);
+        deptOfficeTextField.setDocument(lim4);
+        deptPhoneTextField.setDocument(lim10);
+
+        // Procedure Labels and Text fields
+        procNumberTextField.setDocument(lim7);
+        procNameTextField.setDocument(lim50);
+        procDescTextField.setDocument(lim50);
+//        procDurationTextField.setDocument();
+        procDepartmentTextField.setDocument(lim4);
+
+        // Doctor Labels and Text fields
+        doctorIDTextField.setDocument(lim9);
+        doctorDepartmentTextField.setDocument(lim9);
+//        doctorProceduresTextField.setDocument();
+
+        // Medication Labels and Text fields
+        medNameTextField.setDocument(lim15);
+        medDescTextField.setDocument(lim50);
+        medManufacturerTextField.setDocument(lim15);
+
+        // Interaction Labels and Text fields
+//        interIDTextField.setDocument();
+        interPatientTextField.setDocument(lim9);
+        interDateField.setDocument(lim10);
+        interTimeTextField.setDocument(lim4);
+        interDescTextField.setDocument(lim150);
+
+        // Add Procedure Labels and Text fields
+        procPatientTextField.setDocument(lim9);
+        procPatientNumberTextField.setDocument(lim7);
+        procNotesTextField.setDocument(lim200);
+        procDateTextField.setDocument(lim10);
+        procTimeTextField.setDocument(lim4);
+
+        // Prompt for adding Patient Medications
+        prescDrTextField.setDocument(lim9);
+        prescMedTextField.setDocument(lim15);
+        prescPatientTextField.setDocument(lim9);
+        prescDateTextField.setDocument(lim10);
+    }
+
+    class CharLimit extends PlainDocument {
+        private int limit;
+        public CharLimit(int lim){
+            this.limit = lim;
+        }
+        public void insertString(int offset, String s, AttributeSet set) throws BadLocationException {
+            if(s == null) return;
+            else if ((getLength() + s.length()) <= limit) {
+                super.insertString(offset, s, set);
+            }
+        }
     }
 
     class InnerActionListener implements ActionListener {

@@ -39,6 +39,7 @@ public class StringChecker {
         if (s.length() > 10) return false;
         for (int i = 0; i < s.length(); i++) {
             if (!Character.isLetter(s.charAt(i))) return false;
+        }
         return true;
     }
     public static boolean stateCheck(String s) {
@@ -56,6 +57,7 @@ public class StringChecker {
         if (s.length() > 8) return false;
         for (int i = 0; i < s.length(); i++) {
             if (!Character.isLetter(s.charAt(i))) return false;
+        }
         return true;
     }
 

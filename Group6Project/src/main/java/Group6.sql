@@ -38,11 +38,11 @@ create table PERSON (
     SSN CHAR(9) not null,       -- need to format output to be xxx-xx-xxx
     FName VARCHAR(15) not null,
     MInitial CHAR(1),
-    LName VARCHAR(15), not null,
+    LName VARCHAR(15) not null,
     Curr_address VARCHAR(50) not null,
     Curr_phone CHAR(10) not null,
     Perm_phone CHAR(10) not null,        -- need to format output to be xxx-xxx-xxxx
-    DOB DATE not null,      -- need to format to MM-DD-YYYY
+    DOB CHAR(10) not null,      -- need to format to MM-DD-YYYY
     Sex VARCHAR(10) not null,
     Street VARCHAR(15) not null,
     City VARCHAR(15) not null,
@@ -110,7 +110,8 @@ create table DEPARTMENT(
 create table INTERACTION (
     Int_ID  integer not null,
     Int_Pt CHAR(9) not null,
-    Int_Date_Time  DATETIME not null,
+    Int_Date  CHAR(10) not null,
+    Int_Time  CHAR(4) not null,
     Int_Desc  VARCHAR(150)  not null,
 
 --     constraint INTERACTION_PK
@@ -122,10 +123,10 @@ create table INTERACTION (
  
 Create table PROCEDURE (
     Proc_Num   CHAR(7) not null,
-    Proc_Name  VARCHAR(40) not null,
-    Description VARCHAR(40)  not null,
+    Proc_Name  VARCHAR(50) not null,
+    Description VARCHAR(50)  not null,
     Duration   real not null,
-    Proc_Dept   VARCHAR(40), not null,
+    Proc_Dept   VARCHAR(4), not null,
 
     constraint PROCEDURE_PK
         primary key(Proc_Num),
@@ -149,7 +150,7 @@ create table PERFORMS(
 create table PRESCRIBED_MEDICINE (
     RX_Name  VARCHAR(15)  not null,
     Manufacturer  CHAR(15) not null,
-    RX_Desc    VARCHAR(40)  not null,
+    RX_Desc    VARCHAR(50)  not null,
 
     constraint PRESCRIBED_MEDICINE_PK
         primary key(RX_Name)
@@ -175,7 +176,7 @@ create table UNDERGOES (
     Proc_Pt     CHAR(9) not null,
     Proc_Num    CHAR(7) not null,
     Proc_Notes  VARCHAR(200),
-    Proc_Date_Time  DATETIME,
+    Proc_Date  CHAR(10),
 
     constraint UNDERGOES_FK_PT
         foreign key (Proc_Pt) references PATIENT(Pt_ID)
