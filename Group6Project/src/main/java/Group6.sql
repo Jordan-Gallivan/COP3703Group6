@@ -116,7 +116,8 @@ create table INTERACTION (
 
 --     constraint INTERACTION_PK
 --         primary key(Int_ID),
-
+    constraint INTERACTION_PK
+        primary key (Int_Pt),
     constraint INTERACTION_FK
         foreign key (Int_Pt) references Patient(Pt_ID)
         on delete SET NULL

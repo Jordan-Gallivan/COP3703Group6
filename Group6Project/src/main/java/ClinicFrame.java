@@ -23,6 +23,8 @@ import java.sql.Types;
  * 6. Call add_____SQL methods for respective pages when submit button pressed
  * 7. Generate Queries for pages that request information
  * 8. Call query_______ methods for respective pages when submit button pressed
+ *
+ * 9. fix submit button switch cases
  */
 
 public class ClinicFrame extends JFrame{
@@ -205,9 +207,9 @@ public class ClinicFrame extends JFrame{
     // Prompt for viewing Doctor Procedures
     private JLabel viewDrProcLabel = new JLabel("Enter Doctor ID below to see Procedures" +
             " performed and click 'Submit'");
-    private JTextField docIDforProceduresTextField = new JTextField(20);
-
-
+    private JLabel drProcLabel = new JLabel("Procedures performed by this Doctor:");
+    private JTextField drIDProcTextField = new JTextField(20);
+    private JTextArea drProcTextArea = new JTextArea();
 
     public ClinicFrame() {
         // Connect to server
@@ -352,12 +354,23 @@ public class ClinicFrame extends JFrame{
                 currentPageTextFields.add(deptSvcCode);
                 break;
             case DOCTOR_PROCEDURES:
+                currentPageTextFields.add(drIDProcTextField);
                 break;
         }
         for (var TF : currentPageTextFields) {
             TF.setColumns(20);
         }
     }
+
+    /**
+     * clears all text fields in current view
+     */
+    private void clearTextFields() {
+        for (var TF : currentPageTextFields) {
+            TF.setText("");
+        }
+    }
+
     /**
      * adds the person text fields to the current textfields arraylist
      */
@@ -1058,14 +1071,30 @@ public class ClinicFrame extends JFrame{
         this.add(viewDrProcLabel, lManager);
         lManager.gridx = 0;
         lManager.gridy = 2;
-        this.add(docIDforProceduresTextField, lManager);
-        
+        this.add(drIDProcTextField, lManager);
+
+        drProcTextArea.setColumns(40);
+        drProcTextArea.setRows(8);
+        lManager.gridwidth = 4;
         lManager.gridx = 0;
         lManager.gridy = 3;
+        this.add(drProcLabel, lManager);
+        lManager.gridheight = 7;
+        lManager.gridx = 0;
+        lManager.gridy = 4;
+        this.add(drProcTextArea, lManager);
+
+        lManager.gridwidth = 2;
+        lManager.gridheight = 1;
+        lManager.gridx = 0;
+        lManager.gridy = 12;
         this.add(submitButton, lManager);
+        lManager.gridx = 2;
+        lManager.gridy = 12;
+        this.add(clearButton, lManager);
         
         
-        setSize(550,800);
+        setSize(700,800);
     }
 
     /**
@@ -1142,6 +1171,82 @@ public class ClinicFrame extends JFrame{
         deptSvcCode.setDocument(new CharLimit(4));
     }
 
+    /*
+            HOME_PAGE,
+        PATIENT,
+        DEPARTMENT,
+        PROCEDURE,
+        DOCTOR,
+        MEDICATION,
+        INTERACTION,
+        PROCEDURE_,
+        PATIENT_MEDICATION,
+        HEALTH_RECORD,
+        DEPARTMENT_SERVICES,
+        DOCTOR_PROCEDURES
+     */
+    private void displayErrorMsg(String s) {
+        ErrorMessageFrame frame = new ErrorMessageFrame(s);
+
+        //Make GUI visible
+        frame.setSize(450,450);
+        frame.setVisible(true);
+    }
+    private void displaySuccessMsg() {
+        SuccessFrame frame = new SuccessFrame();
+        //Make GUI visible
+        frame.setSize(100,100);
+        frame.setVisible(true);
+
+        clearTextFields();
+    }
+
+    private boolean checkPt(){
+        StringBuilder errorMsg = new StringBuilder();
+        if (!StringChecker.patientIDCheck(patientIDTextField.getText()) )
+            errorMsg.append("Patient ID must be P followed by 8 digits\n");
+        if (!StringChecker.SSNCheck(SSNTextField.getText()) )
+            errorMsg.append("SSN must be 9 digits\n");
+        if (!StringChecker.phoneCheck(currPhoneTextField.getText()))
+            errorMsg.append("Current Phone must be 10 digits\n");
+        if (!StringChecker.phoneCheck(permPhoneTextField.getText()))
+            errorMsg.append("Permanent Phone must be 10 digits\n");
+        if (!StringChecker.dateCheck(DOBTextField.getText()) )
+            errorMsg.append("DOB must be MM-DD-YYYY Format\n");
+        if (!StringChecker.sexCheck(sexTextField.getText()) )
+            errorMsg.append("Sex must be Male, Female, or other\n");
+        if (!StringChecker.stateCheck(stateTextField.getText()))
+            errorMsg.append("State must be 2 letter abbreviation\n");
+        if (!StringChecker.zipCheck(zipTextField.getText()))
+            errorMsg.append("Zip Code must be 5 digits\n");
+        if (!StringChecker.drIDCheck(primaryCareTextField.getText()))
+            errorMsg.append("Primary Care Doctor ID must be D followed by 8 digits\n");
+        if (!secondaryCareTextField.getText().equals("") &&
+                !StringChecker.drIDCheck(secondaryCareTextField.getText()))
+            errorMsg.append("Primary Care Doctor ID must be D followed by 8 digits\n");
+
+        if (errorMsg.length() != 0) {
+            displayErrorMsg(errorMsg.toString());
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkDept(){return true;}
+    private boolean checkProc(){return true;}
+    private boolean checkDr(){return true;}
+    private boolean checkMed(){return true;}
+    private boolean checkInt(){return true;}
+    private boolean checkPtProc(){return true;}
+    private boolean checkPtMed(){return true;}
+    private boolean checkHealthRecord(){return true;}
+    private boolean checkDeptSvc(){return true;}
+    private boolean checkDrProc(){return true;}
+
+
+
+
+
     /**
      * Adds tuple to PERSON Table.  Called in addPatinetSQL and addDoctorSQL
      * @throws SQLException
@@ -1191,7 +1296,7 @@ public class ClinicFrame extends JFrame{
         pstmt.setString(2, patientIDTextField.getText());
         pstmt.setString(3, patientConditionTextField.getText());
         pstmt.setString(4, primaryCareTextField.getText());
-        if (primaryCareTextField.getText().equals(""))
+        if (secondaryCareTextField.getText().equals(""))
             pstmt.setNull(5, Types.NULL);
         else
             pstmt.setString(5, secondaryCareTextField.getText());
@@ -1343,36 +1448,128 @@ public class ClinicFrame extends JFrame{
         public void actionPerformed(ActionEvent e) {
             // determine source of button click
             if (e.getSource() == clearButton) {
-                for (var TF : currentPageTextFields) {
-                    TF.setText("");
-                }
-
+                clearTextFields();
             } else if (e.getSource() == submitButton) {
                 switch (currentPage) {
                     case HOME_PAGE:
                         this.homePageSelection(HPUserSelectionOptions.getSelectedIndex());
                         break;
                     case PATIENT:
+                        if(checkPt()) {
+                            try {
+//                                addPatientSQL();
+                                displaySuccessMsg();
+
+                            } catch (Exception e1) {
+                                displayErrorMsg(e1.getMessage());
+                            }
+                        }
                         break;
                     case DEPARTMENT:
+                        if(checkDept()) {
+                            try {
+//                                addDepartmentSQL();
+                                displaySuccessMsg();
+
+                            } catch (Exception e1) {
+                                displayErrorMsg(e1.getMessage());
+                            }
+                        }
                         break;
                     case PROCEDURE:
+                        if(checkProc()) {
+                            try {
+//                                addProcedureSQL();
+                                displaySuccessMsg();
+
+                            } catch (Exception e1) {
+                                displayErrorMsg(e1.getMessage());
+                            }
+                        }
                         break;
                     case DOCTOR:
+                        if(checkDr()) {
+                            try {
+//                                addDoctorSQL();
+                                displaySuccessMsg();
+
+                            } catch (Exception e1) {
+                                displayErrorMsg(e1.getMessage());
+                            }
+                        }
                         break;
                     case MEDICATION:
+                        if(checkMed()) {
+                            try {
+//                                addPrescribedMedSQL();
+                                displaySuccessMsg();
+
+                            } catch (Exception e1) {
+                                displayErrorMsg(e1.getMessage());
+                            }
+                        }
                         break;
                     case INTERACTION:
+                        if(checkInt()) {
+                            try {
+//                                addInteractionSQL();
+                                displaySuccessMsg();
+
+                            } catch (Exception e1) {
+                                displayErrorMsg(e1.getMessage());
+                            }
+                        }
                         break;
                     case PROCEDURE_:
+                        if(checkPtProc()) {
+                            try {
+//                                addUndergoesSQL();
+                                displaySuccessMsg();
+
+                            } catch (Exception e1) {
+                                displayErrorMsg(e1.getMessage());
+                            }
+                        }
                         break;
                     case PATIENT_MEDICATION:
+                        if(checkPtMed()) {
+                            try {
+//                                addPrescriptionSQL();
+                                displaySuccessMsg();
+
+                            } catch (Exception e1) {
+                                displayErrorMsg(e1.getMessage());
+                            }
+                        }
                         break;
                     case HEALTH_RECORD:
+                        if(checkHealthRecord()) {
+                            try {
+
+                            } catch (Exception e1) {
+                                displayErrorMsg(e1.getMessage());
+                            }
+                        }
                         break;
                     case DEPARTMENT_SERVICES:
+                        if(checkDeptSvc()) {
+                            try {
+
+
+                            } catch (Exception e1) {
+                                displayErrorMsg(e1.getMessage());
+                            }
+                        }
                         break;
                     case DOCTOR_PROCEDURES:
+                        if(checkDrProc()) {
+                            try {
+
+
+                            } catch (Exception e1) {
+                                displayErrorMsg(e1.getMessage());
+                            }
+                        }
                         break;
                 }
             } else if (e.getSource() == homeButton) {

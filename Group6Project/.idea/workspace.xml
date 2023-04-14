@@ -6,7 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="721fe7b5-77df-457a-b17e-3a8a3f3a9e30" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ClinicFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ClinicFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Group6.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group6.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/StringChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/StringChecker.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +101,10 @@
       <workItem from="1681339752687" duration="6902000" />
       <workItem from="1681389835228" duration="9484000" />
       <workItem from="1681407467057" duration="242000" />
-      <workItem from="1681410827024" duration="99000" />
+      <workItem from="1681410827024" duration="114000" />
+      <workItem from="1681411436740" duration="1159000" />
+      <workItem from="1681497069335" duration="617000" />
+      <workItem from="1681497736670" duration="5900000" />
     </task>
     <servers />
   </component>
