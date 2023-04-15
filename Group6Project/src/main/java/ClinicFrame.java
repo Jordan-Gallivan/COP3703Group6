@@ -691,12 +691,7 @@ public class ClinicFrame extends JFrame{
         lManager.gridy = 6;
         this.add(procDepartmentTextField, lManager);
 
-        lManager.gridx = 0;
-        lManager.gridy = 7;
-        this.add(procDrLabel, lManager);
-        lManager.gridx = 1;
-        lManager.gridy = 7;
-        this.add(procDrTextField, lManager);
+
 
         lManager.gridx = 0;
         lManager.gridy = 8;
@@ -901,9 +896,16 @@ public class ClinicFrame extends JFrame{
 
         lManager.gridx = 0;
         lManager.gridy = 6;
+        this.add(procDrLabel, lManager);
+        lManager.gridx = 1;
+        lManager.gridy = 6;
+        this.add(procDrTextField, lManager);
+
+        lManager.gridx = 0;
+        lManager.gridy = 7;
         this.add(submitButton, lManager);
         lManager.gridx = 2;
-        lManager.gridy = 6;
+        lManager.gridy = 7;
         this.add(clearButton, lManager);
         
         setSize(550,800);
@@ -1160,6 +1162,7 @@ public class ClinicFrame extends JFrame{
         procNotesTextField.setDocument(new CharLimit(200));
         procDateTextField.setDocument(new CharLimit(10));
         procTimeTextField.setDocument(new CharLimit(4));
+        procDrTextField.setDocument(new CharLimit(9));
 
         // Prompt for adding Patient Medications
         prescDrTextField.setDocument(new CharLimit(9));
@@ -1171,20 +1174,6 @@ public class ClinicFrame extends JFrame{
         deptSvcCode.setDocument(new CharLimit(4));
     }
 
-    /*
-            HOME_PAGE,
-        PATIENT,
-        DEPARTMENT,
-        PROCEDURE,
-        DOCTOR,
-        MEDICATION,
-        INTERACTION,
-        PROCEDURE_,
-        PATIENT_MEDICATION,
-        HEALTH_RECORD,
-        DEPARTMENT_SERVICES,
-        DOCTOR_PROCEDURES
-     */
     private void displayErrorMsg(String s) {
         ErrorMessageFrame frame = new ErrorMessageFrame(s);
 
@@ -1201,10 +1190,8 @@ public class ClinicFrame extends JFrame{
         clearTextFields();
     }
 
-    private boolean checkPt(){
+    private String checkPerson(){
         StringBuilder errorMsg = new StringBuilder();
-        if (!StringChecker.patientIDCheck(patientIDTextField.getText()) )
-            errorMsg.append("Patient ID must be P followed by 8 digits\n");
         if (!StringChecker.SSNCheck(SSNTextField.getText()) )
             errorMsg.append("SSN must be 9 digits\n");
         if (!StringChecker.phoneCheck(currPhoneTextField.getText()))
@@ -1219,6 +1206,19 @@ public class ClinicFrame extends JFrame{
             errorMsg.append("State must be 2 letter abbreviation\n");
         if (!StringChecker.zipCheck(zipTextField.getText()))
             errorMsg.append("Zip Code must be 5 digits\n");
+        return errorMsg.toString();
+    }
+
+    private boolean checkPt(){
+        StringBuilder errorMsg = new StringBuilder();
+
+        if (!StringChecker.patientIDCheck(patientIDTextField.getText()) )
+            errorMsg.append("Patient ID must be P followed by 8 digits\n");
+
+        errorMsg.append(checkPerson());
+
+        if (!StringChecker.conditionCheck(patientConditionTextField.getText()))
+            errorMsg.append("Patient Condition must be 'Critical', 'Stable', or 'Fair' \n");
         if (!StringChecker.drIDCheck(primaryCareTextField.getText()))
             errorMsg.append("Primary Care Doctor ID must be D followed by 8 digits\n");
         if (!secondaryCareTextField.getText().equals("") &&
@@ -1232,9 +1232,65 @@ public class ClinicFrame extends JFrame{
         return true;
     }
 
-    private boolean checkDept(){return true;}
-    private boolean checkProc(){return true;}
-    private boolean checkDr(){return true;}
+    private boolean checkDept(){
+        StringBuilder errorMsg = new StringBuilder();
+
+        if (deptCodeTextField.getText().equals(""))
+            errorMsg.append("Department Code cannot be blank.");
+        if (deptNameTextField.getText().equals(""))
+            errorMsg.append("Department Name cannot be blank.");
+        if (!StringChecker.officeNumCheck(deptOfficeTextField.getText()))
+            errorMsg.append("Department Office must be 4 digits.");
+        if (!deptPhoneTextField.getText().equals("") &&
+                !StringChecker.phoneCheck(deptPhoneTextField.getText()))
+            errorMsg.append("Department Office Phone must be 10 digits or blank\n");
+        if (!StringChecker.drIDCheck(deptHeadTextField.getText()))
+            errorMsg.append("Department Head must be a Doctor ID (D followed by 8 digits\n");
+
+        if (errorMsg.length() != 0) {
+            displayErrorMsg(errorMsg.toString());
+            return false;
+        }
+        return true;
+    }
+    private boolean checkProc(){
+        StringBuilder errorMsg = new StringBuilder();
+
+        if (!StringChecker.procedureNumberCheck(procNumberTextField.getText()))
+            errorMsg.append("Procedure Number must be three letters followed by 4 digits");
+        if (procNameTextField.equals(""))
+            errorMsg.append("Procedure Name cannot be blank");
+        if (procDescTextField.equals(""))
+            errorMsg.append("Procedure Description cannot be blank");
+        if (StringChecker.procedureDurationCheck(procDurationTextField.getText()))
+            errorMsg.append("Procedure duration must be a number");
+        if (procDepartmentTextField.getText().equals(""))
+            errorMsg.append("Department Code cannot be blank.");
+
+        if (errorMsg.length() != 0) {
+            displayErrorMsg(errorMsg.toString());
+            return false;
+        }
+
+        return true;
+    }
+    private boolean checkDr(){
+        StringBuilder errorMsg = new StringBuilder();
+
+        if (!StringChecker.drIDCheck(doctorIDTextField.getText()) )
+            errorMsg.append("Doctor ID must be D followed by 8 digits\n");
+
+        errorMsg.append(checkPerson());
+
+        if (doctorDepartmentTextField.getText().equals(""))
+            errorMsg.append("Department Code cannot be blank.");
+
+        if (errorMsg.length() != 0) {
+            displayErrorMsg(errorMsg.toString());
+            return false;
+        }
+        return true;
+    }
     private boolean checkMed(){return true;}
     private boolean checkInt(){return true;}
     private boolean checkPtProc(){return true;}

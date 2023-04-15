@@ -7,8 +7,6 @@
     <list default="true" id="721fe7b5-77df-457a-b17e-3a8a3f3a9e30" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ClinicFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ClinicFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Group6.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group6.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/StringChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/StringChecker.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,6 +103,7 @@
       <workItem from="1681411436740" duration="1159000" />
       <workItem from="1681497069335" duration="617000" />
       <workItem from="1681497736670" duration="5900000" />
+      <workItem from="1681515978379" duration="1743000" />
     </task>
     <servers />
   </component>
