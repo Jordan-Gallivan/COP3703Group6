@@ -18,13 +18,14 @@ import java.sql.Types;
  * x. Change add Interaction  Date and Time TextFields to formatted time/date situations
  * x. Figure out what needs to go in Add Patient Procedure
  * x. Find out how to add procedures to doctors
- * 5. Check all fields that have specific formatting requirements
+ * x. Check all fields that have specific formatting requirements
  *      -> per StringChecker
- * 6. Call add_____SQL methods for respective pages when submit button pressed
- * 7. Generate Queries for pages that request information
- * 8. Call query_______ methods for respective pages when submit button pressed
- *
- * 9. fix submit button switch cases
+ * 6. update character limit for SSN and other req fields for Health Record
+ * 7. Call add_____SQL methods for respective pages when submit button pressed
+ * 8. Generate Queries for pages that request information
+ * 9. Call query_______ methods for respective pages when submit button pressed
+ * 10. fix submit button switch cases
+ * 11. TEST TEST TEST
  */
 
 public class ClinicFrame extends JFrame{
@@ -897,7 +898,7 @@ public class ClinicFrame extends JFrame{
         lManager.gridx = 0;
         lManager.gridy = 6;
         this.add(procDrLabel, lManager);
-        lManager.gridx = 1;
+        lManager.gridx = 2;
         lManager.gridy = 6;
         this.add(procDrTextField, lManager);
 
@@ -967,6 +968,7 @@ public class ClinicFrame extends JFrame{
     private void viewPatient(){
     	int i = 3;
         addPatient(i);
+        currentPage = CurrPage.HEALTH_RECORD;
 
         lManager.gridwidth = 4;
         lManager.gridx = 0;
@@ -1236,16 +1238,16 @@ public class ClinicFrame extends JFrame{
         StringBuilder errorMsg = new StringBuilder();
 
         if (deptCodeTextField.getText().equals(""))
-            errorMsg.append("Department Code cannot be blank.");
+            errorMsg.append("Department Code cannot be blank.\n");
         if (deptNameTextField.getText().equals(""))
-            errorMsg.append("Department Name cannot be blank.");
+            errorMsg.append("Department Name cannot be blank.\n");
         if (!StringChecker.officeNumCheck(deptOfficeTextField.getText()))
-            errorMsg.append("Department Office must be 4 digits.");
+            errorMsg.append("Department Office must be 4 digits.\n");
         if (!deptPhoneTextField.getText().equals("") &&
                 !StringChecker.phoneCheck(deptPhoneTextField.getText()))
             errorMsg.append("Department Office Phone must be 10 digits or blank\n");
         if (!StringChecker.drIDCheck(deptHeadTextField.getText()))
-            errorMsg.append("Department Head must be a Doctor ID (D followed by 8 digits\n");
+            errorMsg.append("Department Head must be a Doctor ID (D followed by 8 digits)\n");
 
         if (errorMsg.length() != 0) {
             displayErrorMsg(errorMsg.toString());
@@ -1257,15 +1259,15 @@ public class ClinicFrame extends JFrame{
         StringBuilder errorMsg = new StringBuilder();
 
         if (!StringChecker.procedureNumberCheck(procNumberTextField.getText()))
-            errorMsg.append("Procedure Number must be three letters followed by 4 digits");
-        if (procNameTextField.equals(""))
-            errorMsg.append("Procedure Name cannot be blank");
-        if (procDescTextField.equals(""))
-            errorMsg.append("Procedure Description cannot be blank");
-        if (StringChecker.procedureDurationCheck(procDurationTextField.getText()))
-            errorMsg.append("Procedure duration must be a number");
+            errorMsg.append("Procedure Number must be three letters followed by 4 digits.\n");
+        if (procNameTextField.getText().equals(""))
+            errorMsg.append("Procedure Name cannot be blank.\n");
+        if (procDescTextField.getText().equals(""))
+            errorMsg.append("Procedure Description cannot be blank.\n");
+        if (!StringChecker.procedureDurationCheck(procDurationTextField.getText()))
+            errorMsg.append("Procedure duration must be a number.\n");
         if (procDepartmentTextField.getText().equals(""))
-            errorMsg.append("Department Code cannot be blank.");
+            errorMsg.append("Department Code cannot be blank.\n");
 
         if (errorMsg.length() != 0) {
             displayErrorMsg(errorMsg.toString());
@@ -1283,7 +1285,7 @@ public class ClinicFrame extends JFrame{
         errorMsg.append(checkPerson());
 
         if (doctorDepartmentTextField.getText().equals(""))
-            errorMsg.append("Department Code cannot be blank.");
+            errorMsg.append("Department Code cannot be blank.\n");
 
         if (errorMsg.length() != 0) {
             displayErrorMsg(errorMsg.toString());
@@ -1291,20 +1293,123 @@ public class ClinicFrame extends JFrame{
         }
         return true;
     }
-    private boolean checkMed(){return true;}
-    private boolean checkInt(){return true;}
-    private boolean checkPtProc(){return true;}
-    private boolean checkPtMed(){return true;}
-    private boolean checkHealthRecord(){return true;}
-    private boolean checkDeptSvc(){return true;}
-    private boolean checkDrProc(){return true;}
+    private boolean checkMed(){
+        StringBuilder errorMsg = new StringBuilder();
+
+        if (medNameTextField.getText().equals(""))
+            errorMsg.append("Medication Name cannot be blank.\n");
+        if (medManufacturerTextField.getText().equals(""))
+            errorMsg.append("Medication Manufacturer cannot be blank.\n");
+        if (medDescTextField.getText().equals(""))
+            errorMsg.append("Medication Description cannot be blank.\n");
+
+        if (errorMsg.length() != 0) {
+            displayErrorMsg(errorMsg.toString());
+            return false;
+        }
+        return true;
+    }
+    private boolean checkInt(){
+        StringBuilder errorMsg = new StringBuilder();
+
+        if (!StringChecker.interactionIDCheck(interIDTextField.getText()))
+            errorMsg.append("Interaction ID must be a unique Integer for this patient.\n");
+        if (!StringChecker.patientIDCheck(interPatientTextField.getText()) )
+            errorMsg.append("Patient ID must be P followed by 8 digits\n");
+        if (!StringChecker.dateCheck(interDateField.getText()) )
+            errorMsg.append("Interaction Date must be MM-DD-YYYY Format\n");
+        if (!StringChecker.timeCheck(interTimeTextField.getText()))
+            errorMsg.append("Interaction time must be in the form HHMM, using the 24-Hour Clock\n");
+        if (interDescTextField.getText().equals(""))
+            errorMsg.append("Interaction Description cannot be blank.\n");
+
+        if (errorMsg.length() != 0) {
+            displayErrorMsg(errorMsg.toString());
+            return false;
+        }
+        return true;
+    }
+    private boolean checkPtProc(){
+        StringBuilder errorMsg = new StringBuilder();
+
+        if (!StringChecker.patientIDCheck(procPatientTextField.getText()) )
+            errorMsg.append("Patient ID must be P followed by 8 digits\n");
+        if (!StringChecker.procedureNumberCheck(procPatientNumberTextField.getText()))
+            errorMsg.append("Procedure Number must be three letters followed by 4 digits.\n");
+        if (!StringChecker.dateCheck(procDateTextField.getText()) )
+            errorMsg.append("Procedure Date must be MM-DD-YYYY Format\n");
+        if (!StringChecker.timeCheck(procTimeTextField.getText()))
+            errorMsg.append("Procedure time must be in the form HHMM, using the 24-Hour Clock\n");
+        if (!StringChecker.drIDCheck(procDrTextField.getText()) )
+            errorMsg.append("Doctor ID must be D followed by 8 digits\n");
+
+        if (errorMsg.length() != 0) {
+            displayErrorMsg(errorMsg.toString());
+            return false;
+        }
+        return true;
+    }
+    private boolean checkPtMed(){
+        StringBuilder errorMsg = new StringBuilder();
+
+        if (!StringChecker.drIDCheck(prescDrTextField.getText()) )
+            errorMsg.append("Doctor ID must be D followed by 8 digits\n");
+        if (prescMedTextField.getText().equals(""))
+            errorMsg.append("Medication Name cannot be blank.\n");
+        if (!StringChecker.patientIDCheck(prescPatientTextField.getText()) )
+            errorMsg.append("Patient ID must be P followed by 8 digits\n");
+        if (!StringChecker.dateCheck(prescDateTextField.getText()) )
+            errorMsg.append("Procedure Date must be MM-DD-YYYY Format\n");
+
+        if (errorMsg.length() != 0) {
+            displayErrorMsg(errorMsg.toString());
+            return false;
+        }
+        return true;
+    }
+    private boolean checkHealthRecord(){
+        StringBuilder errorMsg = new StringBuilder();
+
+        if (!StringChecker.patientIDCheck(patientIDTextField.getText()) )
+            errorMsg.append("Patient ID must be P followed by 8 digits\n");
+
+        if (errorMsg.length() != 0) {
+            displayErrorMsg(errorMsg.toString());
+            return false;
+        }
+        return true;
+    }
+    private boolean checkDeptSvc(){
+        StringBuilder errorMsg = new StringBuilder();
+
+        if (deptSvcCode.getText().equals(""))
+            errorMsg.append("Department Code cannot be blank.\n");
+
+        if (errorMsg.length() != 0) {
+            displayErrorMsg(errorMsg.toString());
+            return false;
+        }
+        return true;
+    }
+    private boolean checkDrProc(){
+        StringBuilder errorMsg = new StringBuilder();
+
+        if (!StringChecker.drIDCheck(drIDProcTextField.getText()) )
+            errorMsg.append("Doctor ID must be D followed by 8 digits\n");
+
+        if (errorMsg.length() != 0) {
+            displayErrorMsg(errorMsg.toString());
+            return false;
+        }
+        return true;
+    }
 
 
 
 
 
     /**
-     * Adds tuple to PERSON Table.  Called in addPatinetSQL and addDoctorSQL
+     * Adds tuple to PERSON Table.  Called in addPatientSQL and addDoctorSQL
      * @throws SQLException
      */
     private void addPersonSQL() throws SQLException {

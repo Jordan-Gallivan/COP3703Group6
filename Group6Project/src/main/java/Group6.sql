@@ -151,7 +151,7 @@ create table PERFORMS(
 );
 create table PRESCRIBED_MEDICINE (
     RX_Name  VARCHAR(15)  not null,
-    Manufacturer  CHAR(15) not null,
+    Manufacturer  VARCHAR(15) not null,
     RX_Desc    VARCHAR(50)  not null,
 
     constraint PRESCRIBED_MEDICINE_PK

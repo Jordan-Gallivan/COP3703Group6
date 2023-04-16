@@ -131,6 +131,7 @@ public class StringChecker {
     }
 
     public static boolean procedureDurationCheck(String s) {
+        if (s.length() == 0) return false;
         try {
             double d = Double.parseDouble(s);
             return true;
