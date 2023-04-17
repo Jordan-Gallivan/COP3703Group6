@@ -233,7 +233,7 @@ public class ClinicFrame extends JFrame{
 ///////////////////////////////// PRIOR TO SUBMISSION //////////////////
         // uncomment the disconnetFromDB method
         // uncomment the below line
-//        connectToDB();
+        connectToDB();
 
 
     }   // end of constructor
@@ -245,9 +245,9 @@ public class ClinicFrame extends JFrame{
     private void connectToDB(){
         try {
             //Load JDBC driver
-            Class.forName("Oracle.jdbc.driver.OracleDriver");
+            Class.forName("oracle.jdbc.driver.OracleDriver");
         } catch (ClassNotFoundException e){
-            e.printStackTrace();
+            System.out.println("Error on line 248");
         }
 
         String serverName = "cisvm-oracle.unfcsd.unf.edu";
@@ -259,6 +259,7 @@ public class ClinicFrame extends JFrame{
         try {
             //Create a connection using given url,username and password
             conn = DriverManager.getConnection(url, username, password);
+            System.out.println("Connected to Database.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -269,12 +270,13 @@ public class ClinicFrame extends JFrame{
      */
     public void disconnectFromDB(){
 ///////////////////////// uncomment prior to submission //////////////////////////
-//        System.out.println("This is successful");
-//        try {
-//            conn.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
+
+        try {
+            conn.close();
+            System.out.println("Disconnected from Database.");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -1246,7 +1248,7 @@ public class ClinicFrame extends JFrame{
         if (!deptPhoneTextField.getText().equals("") &&
                 !StringChecker.phoneCheck(deptPhoneTextField.getText()))
             errorMsg.append("Department Office Phone must be 10 digits or blank\n");
-        if (!StringChecker.drIDCheck(deptHeadTextField.getText()))
+        if (!deptHeadTextField.getText().equals("") && !StringChecker.drIDCheck(deptHeadTextField.getText()))
             errorMsg.append("Department Head must be a Doctor ID (D followed by 8 digits)\n");
 
         if (errorMsg.length() != 0) {
@@ -1618,7 +1620,7 @@ public class ClinicFrame extends JFrame{
                     case PATIENT:
                         if(checkPt()) {
                             try {
-//                                addPatientSQL();
+                                addPatientSQL();
                                 displaySuccessMsg();
 
                             } catch (Exception e1) {
