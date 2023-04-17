@@ -1,17 +1,14 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.PreparedStatement;
+import java.sql.*;
+import java.sql.Connection;
 import java.util.ArrayList;
 import javax.print.DocFlavor;
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Types;
 
 /*TO DO:
  * x. Change Procedure Duration TextField to a formatted time/date situation
@@ -321,6 +318,7 @@ public class ClinicFrame extends JFrame{
                 currentPageTextFields.add(procDescTextField);
                 currentPageTextFields.add(procDurationTextField);
                 currentPageTextFields.add(procDepartmentTextField);
+                currentPageTextFields.add(procDrTextField);
                 break;
             case DOCTOR:
                 currentPageTextFields.add(doctorIDTextField);
@@ -345,7 +343,7 @@ public class ClinicFrame extends JFrame{
                 currentPageTextFields.add(procNotesTextField);
                 currentPageTextFields.add(procDateTextField);
                 currentPageTextFields.add(procTimeTextField);
-                currentPageTextFields.add(procDrTextField);
+//                currentPageTextFields.add(procDrTextField);
                 break;
             case PATIENT_MEDICATION:
                 currentPageTextFields.add(prescDrTextField);
@@ -581,10 +579,10 @@ public class ClinicFrame extends JFrame{
         lManager.gridy = 19 + i;
         this.add(submitButton, lManager);
         
-        lManager.gridwidth = 4;
-        lManager.gridx = 0;
-        lManager.gridy = 20;
-        this.add(addButton, lManager);
+//        lManager.gridwidth = 4;
+//        lManager.gridx = 0;
+//        lManager.gridy = 20;
+//        this.add(addButton, lManager);
 
         setSize(550,800);
     }
@@ -694,6 +692,13 @@ public class ClinicFrame extends JFrame{
         lManager.gridy = 6;
         this.add(procDepartmentTextField, lManager);
 
+        lManager.gridx = 0;
+        lManager.gridy = 7;
+        this.add(procDrLabel, lManager);
+        lManager.gridx = 1;
+        lManager.gridy = 7;
+        this.add(procDrTextField, lManager);
+
 
 
         lManager.gridx = 0;
@@ -739,6 +744,7 @@ public class ClinicFrame extends JFrame{
 //        lManager.gridy = 18 + i;
 //        this.add(doctorProceduresTextField, lManager);
 
+        lManager.gridwidth = 2;
         lManager.gridx = 0;
         lManager.gridy = 19 + i;
         this.add(clearButton, lManager);
@@ -897,12 +903,12 @@ public class ClinicFrame extends JFrame{
         lManager.gridy = 5;
         this.add(procTimeTextField, lManager);
 
-        lManager.gridx = 0;
-        lManager.gridy = 6;
-        this.add(procDrLabel, lManager);
-        lManager.gridx = 2;
-        lManager.gridy = 6;
-        this.add(procDrTextField, lManager);
+//        lManager.gridx = 0;
+//        lManager.gridy = 6;
+//        this.add(procDrLabel, lManager);
+//        lManager.gridx = 2;
+//        lManager.gridy = 6;
+//        this.add(procDrTextField, lManager);
 
         lManager.gridx = 0;
         lManager.gridy = 7;
@@ -1270,6 +1276,9 @@ public class ClinicFrame extends JFrame{
             errorMsg.append("Procedure duration must be a number.\n");
         if (procDepartmentTextField.getText().equals(""))
             errorMsg.append("Department Code cannot be blank.\n");
+        if (!StringChecker.drIDCheck(procDrTextField.getText()))
+            errorMsg.append("Doctor ID must be D followed by 8 digits\n");
+
 
         if (errorMsg.length() != 0) {
             displayErrorMsg(errorMsg.toString());
@@ -1342,8 +1351,8 @@ public class ClinicFrame extends JFrame{
             errorMsg.append("Procedure Date must be MM-DD-YYYY Format\n");
         if (!StringChecker.timeCheck(procTimeTextField.getText()))
             errorMsg.append("Procedure time must be in the form HHMM, using the 24-Hour Clock\n");
-        if (!StringChecker.drIDCheck(procDrTextField.getText()) )
-            errorMsg.append("Doctor ID must be D followed by 8 digits\n");
+//        if (!StringChecker.drIDCheck(procDrTextField.getText()) )
+//            errorMsg.append("Doctor ID must be D followed by 8 digits\n");
 
         if (errorMsg.length() != 0) {
             displayErrorMsg(errorMsg.toString());
@@ -1407,7 +1416,24 @@ public class ClinicFrame extends JFrame{
     }
 
 
+    private boolean personExists() {
+        String q = "select SSN, FNAME " +
+                "from PERSON " +
+                "where SSN = " + SSNTextField.getText();
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement();
+            ResultSet rset = stmt.executeQuery(q);
+            if (rset.next() /*&&
+                    rset.getString("SSN").equals(SSNTextField.getText()) &&
+                    rset.getString("FNAME").equals(firstNameTextField.getText())*/)
+                return true;
+            return false;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
+    }
 
 
     /**
@@ -1452,7 +1478,8 @@ public class ClinicFrame extends JFrame{
      * @throws SQLException
      */
     private void addPatientSQL() throws SQLException {
-        addPersonSQL();
+        if (!personExists())
+            addPersonSQL();
         PreparedStatement pstmt = conn.prepareStatement("INSERT INTO PATIENT " +
                 "VALUES(?, ?, ?, ?, ?)");
         pstmt.setString(1, SSNTextField.getText());
@@ -1471,7 +1498,8 @@ public class ClinicFrame extends JFrame{
      * @throws SQLException
      */
     private void addDoctorSQL() throws SQLException {
-        addPersonSQL();
+        if (!personExists())
+            addPersonSQL();
         PreparedStatement pstmt = conn.prepareStatement("INSERT INTO DOCTOR " +
                 "VALUES(?, ?, ?)");
         pstmt.setString(1, SSNTextField.getText());

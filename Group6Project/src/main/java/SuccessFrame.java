@@ -21,6 +21,8 @@ public class SuccessFrame  extends JFrame {
         lManager.gridy = 1;
         this.add(OKButton, lManager);
 
+        setSize(300,300);
+
         OKButton.addActionListener(new InnerActionListener());
     }
     private void closeFrame() {
