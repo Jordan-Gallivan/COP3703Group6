@@ -1131,7 +1131,7 @@ public class ClinicFrame extends JFrame{
 
         // Department Labels and Text fields
         deptCodeTextField.setDocument(new CharLimit(4));
-        deptNameTextField.setDocument(new CharLimit(15));
+        deptNameTextField.setDocument(new CharLimit(40));
         deptOfficeTextField.setDocument(new CharLimit(4));
         deptPhoneTextField.setDocument(new CharLimit(10));
         deptHeadTextField.setDocument(new CharLimit(9));
@@ -1487,15 +1487,15 @@ public class ClinicFrame extends JFrame{
         PreparedStatement pstmt = conn.prepareStatement("INSERT INTO DEPARTMENT " +
                 "VALUES(?, ?, ?, ?, ?)");
         pstmt.setString(1, deptCodeTextField.getText());
-        pstmt.setString(2, deptNameTextField.getText());
-        pstmt.setString(3, deptOfficeTextField.getText());
+        pstmt.setString(2, deptOfficeTextField.getText());
 
         if (deptPhoneTextField.getText().equals(""))
-            pstmt.setNull(4, Types.NULL);
+            pstmt.setNull(3, Types.NULL);
         else
-            pstmt.setString(4, deptPhoneTextField.getText());
+            pstmt.setString(3, deptPhoneTextField.getText());
 
-        pstmt.setString(5, deptHeadTextField.getText());
+        pstmt.setString(4, deptHeadTextField.getText());
+        pstmt.setString(5, deptNameTextField.getText());
 
         pstmt.executeUpdate();
     }
@@ -1631,7 +1631,7 @@ public class ClinicFrame extends JFrame{
                     case DEPARTMENT:
                         if(checkDept()) {
                             try {
-//                                addDepartmentSQL();
+                                addDepartmentSQL();
                                 displaySuccessMsg();
 
                             } catch (Exception e1) {
@@ -1642,7 +1642,7 @@ public class ClinicFrame extends JFrame{
                     case PROCEDURE:
                         if(checkProc()) {
                             try {
-//                                addProcedureSQL();
+                                addProcedureSQL();
                                 displaySuccessMsg();
 
                             } catch (Exception e1) {
@@ -1653,7 +1653,7 @@ public class ClinicFrame extends JFrame{
                     case DOCTOR:
                         if(checkDr()) {
                             try {
-//                                addDoctorSQL();
+                                addDoctorSQL();
                                 displaySuccessMsg();
 
                             } catch (Exception e1) {
@@ -1664,7 +1664,7 @@ public class ClinicFrame extends JFrame{
                     case MEDICATION:
                         if(checkMed()) {
                             try {
-//                                addPrescribedMedSQL();
+                                addPrescribedMedSQL();
                                 displaySuccessMsg();
 
                             } catch (Exception e1) {
@@ -1675,7 +1675,7 @@ public class ClinicFrame extends JFrame{
                     case INTERACTION:
                         if(checkInt()) {
                             try {
-//                                addInteractionSQL();
+                                addInteractionSQL();
                                 displaySuccessMsg();
 
                             } catch (Exception e1) {
@@ -1686,7 +1686,7 @@ public class ClinicFrame extends JFrame{
                     case PROCEDURE_:
                         if(checkPtProc()) {
                             try {
-//                                addUndergoesSQL();
+                                addUndergoesSQL();
                                 displaySuccessMsg();
 
                             } catch (Exception e1) {
@@ -1697,7 +1697,7 @@ public class ClinicFrame extends JFrame{
                     case PATIENT_MEDICATION:
                         if(checkPtMed()) {
                             try {
-//                                addPrescriptionSQL();
+                                addPrescriptionSQL();
                                 displaySuccessMsg();
 
                             } catch (Exception e1) {
