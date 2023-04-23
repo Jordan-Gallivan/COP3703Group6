@@ -196,7 +196,7 @@ public class ClinicFrame extends JFrame{
     private JTextArea patientMedicationsTextArea = new JTextArea();
 
     // Prompt for viewing Department Services
-    private JLabel viewDeptSvcLabel = new JLabel("Enter Department code to view " +
+    private JLabel viewDeptSvcLabel = new JLabel("Enter Department code or Department Name to view " +
             "services provided and click 'Submit'");
     private JLabel deptSvcOfferedLabel = new JLabel("This department offers the below services:");
     private JTextField deptSvcCode = new JTextField(20);
@@ -983,7 +983,6 @@ public class ClinicFrame extends JFrame{
         lManager.gridy = 1;
         this.add(viewPatientLabel, lManager);
 
-        // need to add TF's for prescribed medicine, interactions and procedures
         patientProceduresTextArea.setColumns(40);
         patientProceduresTextArea.setRows(8);
         patientInteractionsTextArea.setColumns(40);
@@ -1180,8 +1179,11 @@ public class ClinicFrame extends JFrame{
         prescPatientTextField.setDocument(new CharLimit(9));
         prescDateTextField.setDocument(new CharLimit(10));
 
+        // view Doctor Procedures
+        drIDProcTextField.setDocument(new CharLimit(9));
+
         // view department services
-        deptSvcCode.setDocument(new CharLimit(4));
+        deptSvcCode.setDocument(new CharLimit(15));
     }
 
     private void displayErrorMsg(String s) {
@@ -1436,6 +1438,7 @@ public class ClinicFrame extends JFrame{
     }
 
 
+
     /**
      * Adds tuple to PERSON Table.  Called in addPatientSQL and addDoctorSQL
      * @throws SQLException
@@ -1615,6 +1618,68 @@ public class ClinicFrame extends JFrame{
 
     }
 
+    private String deptSvcQuery(String code) throws SQLException {
+        StringBuilder sb = new StringBuilder();
+        String q = "select proc_name " +
+                "from procedure " +
+                "where procedure.PROC_DEPT = " + "\'" + code + "\'" +
+                "or procedure.proc_dept = " +
+                    "(select dept_code " +
+                    "from department " +
+                    "where department.dept_name = " + "\'" + code + "\')";
+        Statement stmt = conn.createStatement();
+        ResultSet rset = stmt.executeQuery(q);
+        while (rset.next()) {
+            sb.append(rset.getString("proc_name"));
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    private String drProcQuery(String doctor) throws SQLException {
+        StringBuilder sb = new StringBuilder();
+        String q = "SELECT proc_name " +
+            "FROM procedure " +
+            "WHERE procedure.PROC_NUM = any" +
+                "(SELECT proc " +
+                "FROM performs " +
+                "WHERE proc_dr = " + "\'" + doctor + "\')";
+        Statement stmt = conn.createStatement();
+        ResultSet rset = stmt.executeQuery(q);
+        while (rset.next()) {
+            sb.append(rset.getString("proc_name"));
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    private void displayPtHealthRecord(String ptID) throws SQLException {
+        StringBuilder sb = new StringBuilder();
+        Statement stmt = conn.createStatement();
+        String personQ = "Select * " +
+                "from (person natural join patient) " +
+                "where patient.pt_id = " + "\'" + ptID + "\'";
+        ResultSet rset = stmt.executeQuery(personQ);
+        rset.next();
+        SSNTextField.setText(rset.getString("SSN"));
+        firstNameTextField.setText(rset.getString("FName"));
+        mInitialTextField.setText(rset.getString("MInitial"));
+        lastNameTextField.setText(rset.getString("LName"));
+        currAddressTextField.setText(rset.getString("curr_address"));
+        currPhoneTextField.setText(rset.getString("curr_phone"));
+        permPhoneTextField.setText(rset.getString("perm_phone"));
+        DOBTextField.setText(rset.getString("DOB"));
+        sexTextField.setText(rset.getString("sex"));
+        streetTextField.setText(rset.getString("street"));
+        cityTextField.setText(rset.getString("city"));
+        stateTextField.setText(rset.getString("permstate"));
+        zipTextField.setText(rset.getString("zip"));
+        patientConditionTextField.setText(rset.getString("pt_condition"));
+        primaryCareTextField.setText(rset.getString("pri_care_dr"));
+        secondaryCareTextField.setText(rset.getString("sec_care_dr"));
+    }
+
+
 
 
     class CharLimit extends PlainDocument {
@@ -1640,6 +1705,19 @@ public class ClinicFrame extends JFrame{
             // determine source of button click
             if (e.getSource() == clearButton) {
                 clearTextFields();
+                switch (currentPage) {
+                    case HEALTH_RECORD:
+                        patientProceduresTextArea.setText("");
+                        patientInteractionsTextArea.setText("");
+                        patientMedicationsTextArea.setText("");
+                        break;
+                    case DEPARTMENT_SERVICES:
+                        deptSvcOfferedTextArea.setText("");
+                        break;
+                    case DOCTOR_PROCEDURES:
+                        drProcTextArea.setText("");
+                        break;
+                }
             } else if (e.getSource() == submitButton) {
                 switch (currentPage) {
                     case HOME_PAGE:
@@ -1736,7 +1814,7 @@ public class ClinicFrame extends JFrame{
                     case HEALTH_RECORD:
                         if(checkHealthRecord()) {
                             try {
-
+                                displayPtHealthRecord(patientIDTextField.getText());
                             } catch (Exception e1) {
                                 displayErrorMsg(e1.getMessage());
                             }
@@ -1745,8 +1823,8 @@ public class ClinicFrame extends JFrame{
                     case DEPARTMENT_SERVICES:
                         if(checkDeptSvc()) {
                             try {
-
-
+                                String services = deptSvcQuery(deptSvcCode.getText());
+                                deptSvcOfferedTextArea.setText(services);
                             } catch (Exception e1) {
                                 displayErrorMsg(e1.getMessage());
                             }
@@ -1755,8 +1833,8 @@ public class ClinicFrame extends JFrame{
                     case DOCTOR_PROCEDURES:
                         if(checkDrProc()) {
                             try {
-
-
+                                String procedures = drProcQuery(drIDProcTextField.getText());
+                                drProcTextArea.setText(procedures);
                             } catch (Exception e1) {
                                 displayErrorMsg(e1.getMessage());
                             }
@@ -1805,7 +1883,6 @@ public class ClinicFrame extends JFrame{
                 default:
                     break;
             }
-
         }
     }
 }
