@@ -431,6 +431,7 @@ public class ClinicFrame extends JFrame{
         lManager.gridy = 0;
         this.add(homeButton, lManager);
 
+        SSNTextField.setDocument(new CharLimit(9));
         lManager.gridwidth = 2;
         lManager.gridx = 0;
         lManager.gridy = i + 1;
@@ -470,6 +471,8 @@ public class ClinicFrame extends JFrame{
         lManager.gridy = i + 5;
         this.add(currAddressTextField, lManager);
 
+        currPhoneTextField.setDocument(new CharLimit(10));
+        permPhoneTextField.setDocument(new CharLimit(10));
         lManager.gridx = 0;
         lManager.gridy = i + 6;
         this.add(currPhoneLabel, lManager);
@@ -983,14 +986,14 @@ public class ClinicFrame extends JFrame{
         lManager.gridy = 1;
         this.add(viewPatientLabel, lManager);
 
-        patientProceduresTextArea.setColumns(40);
+        patientProceduresTextArea.setColumns(60);
         patientProceduresTextArea.setRows(8);
-        patientInteractionsTextArea.setColumns(40);
-        patientInteractionsTextArea.setRows(8);
-        patientMedicationsTextArea.setColumns(40);
-        patientMedicationsTextArea.setRows(8);
+        patientInteractionsTextArea.setColumns(60);
+        patientInteractionsTextArea.setRows(12);
+        patientMedicationsTextArea.setColumns(60);
+        patientMedicationsTextArea.setRows(12);
 
-        lManager.gridwidth = 4;
+        lManager.gridwidth = 8;
         lManager.gridx = 4;
         lManager.gridy = 1;
         this.add(patientProceduresLabel, lManager);
@@ -1003,22 +1006,22 @@ public class ClinicFrame extends JFrame{
         lManager.gridx = 4;
         lManager.gridy = 7;
         this.add(patientInteractionsLabel, lManager);
-        lManager.gridheight = 5;
+        lManager.gridheight = 6;
         lManager.gridx = 4;
         lManager.gridy = 8;
         this.add(patientInteractionsTextArea, lManager);
 
         lManager.gridheight = 1;
         lManager.gridx = 4;
-        lManager.gridy = 13;
-        this.add(patientMedicaitonsLabel, lManager);
-        lManager.gridheight = 5;
-        lManager.gridx = 4;
         lManager.gridy = 14;
+        this.add(patientMedicaitonsLabel, lManager);
+        lManager.gridheight = 6;
+        lManager.gridx = 4;
+        lManager.gridy = 15;
         this.add(patientMedicationsTextArea, lManager);
         
         
-        setSize(1300,800);
+        setSize(1600,800);
     }
     /**
      * Displays the Services that the Department offers
@@ -1114,7 +1117,7 @@ public class ClinicFrame extends JFrame{
      */
     private void setCharLimits() {
         // Person Labels and Text fields
-        SSNTextField.setDocument(new CharLimit(9));
+
         firstNameTextField.setDocument(new CharLimit(15));
         mInitialTextField.setDocument(new CharLimit(1));
         lastNameTextField.setDocument(new CharLimit(15));
@@ -1656,18 +1659,42 @@ public class ClinicFrame extends JFrame{
     private void displayPtHealthRecord(String ptID) throws SQLException {
         StringBuilder sb = new StringBuilder();
         Statement stmt = conn.createStatement();
+
         String personQ = "Select * " +
                 "from (person natural join patient) " +
                 "where patient.pt_id = " + "\'" + ptID + "\'";
+
+        String proceduresQ = "Select proc_Name " +
+                "from (undergoes natural join procedure) " +
+                "where proc_pt = " + "\'" + ptID + "\'";
+
+        String interactionQ = "select * " +
+                "from interaction " +
+                "where Int_Pt = " + "\'" + ptID + "\'";
+
+        String medsQ = "select * " +
+                "from prescription " +
+                "where pres_Pt = " + "\'" + ptID + "\'";
+
+
         ResultSet rset = stmt.executeQuery(personQ);
         rset.next();
-        SSNTextField.setText(rset.getString("SSN"));
+        SSNTextField.setDocument(new CharLimit(11));
+        currPhoneTextField.setDocument(new CharLimit(12));
+        permPhoneTextField.setDocument(new CharLimit(12));
+        SSNTextField.setText(rset.getString("SSN").substring(0,3) + "-" +
+                rset.getString("SSN").substring(3,5) + "-" +
+                rset.getString("SSN").substring(5,9));
         firstNameTextField.setText(rset.getString("FName"));
         mInitialTextField.setText(rset.getString("MInitial"));
         lastNameTextField.setText(rset.getString("LName"));
         currAddressTextField.setText(rset.getString("curr_address"));
-        currPhoneTextField.setText(rset.getString("curr_phone"));
-        permPhoneTextField.setText(rset.getString("perm_phone"));
+        currPhoneTextField.setText(rset.getString("curr_phone").substring(0,3) + "-" +
+                rset.getString("curr_phone").substring(3,6) + "-" +
+                rset.getString("curr_phone").substring(6,10));
+        permPhoneTextField.setText(rset.getString("perm_phone").substring(0,3) + "-" +
+                rset.getString("perm_phone").substring(3,6) + "-" +
+                rset.getString("perm_phone").substring(6,10));
         DOBTextField.setText(rset.getString("DOB"));
         sexTextField.setText(rset.getString("sex"));
         streetTextField.setText(rset.getString("street"));
@@ -1677,6 +1704,34 @@ public class ClinicFrame extends JFrame{
         patientConditionTextField.setText(rset.getString("pt_condition"));
         primaryCareTextField.setText(rset.getString("pri_care_dr"));
         secondaryCareTextField.setText(rset.getString("sec_care_dr"));
+
+        rset = stmt.executeQuery(proceduresQ);
+        while (rset.next()) {
+            sb.append(rset.getString("proc_name"));
+            sb.append("\n");
+        }
+        patientProceduresTextArea.setText(sb.toString());
+
+        sb = new StringBuilder();
+        rset = stmt.executeQuery(interactionQ);
+        while (rset.next()) {
+            sb.append( "Int#: " + rset.getString("int_id") +
+                    "  Date: " + rset.getString("int_date") +
+                    "  Time: " + rset.getString("int_time") +
+                    "\n    Desc: " + rset.getString("int_desc") +
+                    "\n" );
+        }
+        patientInteractionsTextArea.setText(sb.toString());
+
+        sb = new StringBuilder();
+        rset = stmt.executeQuery(medsQ);
+        while (rset.next()) {
+            sb.append( "Rx: " + rset.getString("Pres_Rx") +
+                    "  Date: " + rset.getString("Date_Rx") +
+                    "\n    Prescribed by: " + rset.getString("Pres_Dr") +
+                    "\n" );
+        }
+        patientMedicationsTextArea.setText(sb.toString());
     }
 
 
